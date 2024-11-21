@@ -1,11 +1,9 @@
-import CreditCardForm from "../components/CreditCardForm"
+import CreditCardForm from "../components/CreditCardForm";
 
 function Payment({ children }) {
-
 	return (
 		<div>
-			<h1>Payment</h1>
-			<CreditCardForm/>
+			<CreditCardForm />
 			{children}
 		</div>
 	);

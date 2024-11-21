@@ -43,9 +43,11 @@ function App() {
 			<Route
 				path="/theatres/:theatreId"
 				element={
-					<TheatreDetail>
-						Example of &apos;children&apos; prop in App.jsx
-					</TheatreDetail>
+					<Nav title={"Browse Showtimes for Theatre "}>
+						<TheatreDetail>
+							Example of &apos;children&apos; prop in App.jsx
+						</TheatreDetail>
+					</Nav>
 				}
 			/>
 			<Route
@@ -59,23 +61,23 @@ function App() {
 			<Route
 				path="/payment"
 				element={
-					<Nav>
+					<Nav title={"Enter Your Credit Card Information"}>
 						<Payment></Payment>
 					</Nav>
-				}	
+				}
 			/>
 			<Route
 				path="/register"
 				element={
-					<Nav>
+					<Nav title={"Sign Up for AcmePlex"}>
 						<Register></Register>
 					</Nav>
-				}	
-				/>
+				}
+			/>
 			<Route
 				path="/login"
 				element={
-					<Nav title="Login">
+					<Nav title={"Login"}>
 						<Login />
 					</Nav>
 				}
