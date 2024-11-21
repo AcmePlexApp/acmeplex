@@ -7,8 +7,6 @@ function Login() {
 
 	return (
 		<div>
-			<h1>Login</h1>
-
 			{!isLoggedIn ? (
 				<button onClick={handleLogin}>Click to Login!</button>
 			) : (

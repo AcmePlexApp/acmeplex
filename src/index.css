@@ -9,6 +9,9 @@ body {
 	@apply h-full bg-primary-900 text-primary-100 p-1;
 }
 
+nav {
+	@apply sticky top-0 bg-primary-800 rounded-md p-1;
+}
 nav ul {
 	@apply bg-primary-800 rounded-t-md p-1 flex flex-row justify-between;
 }
@@ -23,7 +26,7 @@ div {
 
 /* Text */
 h1 {
-	@apply font-bold text-xl my-2;
+	@apply sticky ml-3 top-10 font-bold text-xl my-2 bg-primary-700;
 }
 
 h2 {

@@ -17,7 +17,7 @@ function App() {
 			<Route
 				path="/movies"
 				element={
-					<Nav>
+					<Nav title={"Browse Movies"}>
 						<Movies></Movies>
 					</Nav>
 				}
@@ -25,7 +25,7 @@ function App() {
 			<Route
 				path="/movies/:movieId"
 				element={
-					<Nav>
+					<Nav title={"Browse Showtimes for "}>
 						<MovieDetail>
 							Example of &apos;children&apos; prop in App.jsx
 						</MovieDetail>
@@ -35,7 +35,7 @@ function App() {
 			<Route
 				path="/theatres"
 				element={
-					<Nav>
+					<Nav title={"Browse Theatres"}>
 						<Theatres></Theatres>
 					</Nav>
 				}
@@ -51,7 +51,7 @@ function App() {
 			<Route
 				path="/profile"
 				element={
-					<Nav>
+					<Nav title={"Profile"}>
 						<Profile></Profile>
 					</Nav>
 				}
@@ -75,7 +75,7 @@ function App() {
 			<Route
 				path="/login"
 				element={
-					<Nav>
+					<Nav title="Login">
 						<Login />
 					</Nav>
 				}
@@ -83,7 +83,7 @@ function App() {
 			<Route
 				path="*"
 				element={
-					<Nav>
+					<Nav title={"Page Not Found"}>
 						<PageNotFound />
 					</Nav>
 				}
