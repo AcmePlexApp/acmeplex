@@ -7,6 +7,8 @@ import TheatreDetail from "./pages/TheatreDetail";
 import Nav from "./components/Nav";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Payment from "./pages/Payment";
+import Register from "./pages/Register";
 
 function App() {
 	return (
@@ -54,6 +56,22 @@ function App() {
 					</Nav>
 				}
 			/>
+			<Route
+				path="/payment"
+				element={
+					<Nav>
+						<Payment></Payment>
+					</Nav>
+				}	
+			/>
+			<Route
+				path="/register"
+				element={
+					<Nav>
+						<Register></Register>
+					</Nav>
+				}	
+				/>
 			<Route
 				path="/login"
 				element={
