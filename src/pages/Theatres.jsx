@@ -1,10 +1,5 @@
 function theatres({ children }) {
-	return (
-		<div>
-			<h1>Browse Theatres</h1>
-			{children}
-		</div>
-	);
+	return <div>{children}</div>;
 }
 
 export default theatres;

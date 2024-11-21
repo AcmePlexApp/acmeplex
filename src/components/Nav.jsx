@@ -1,12 +1,15 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-function Nav({ children }) {
+function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
 	const navigate = useNavigate();
 	const handleLogout = () => {
-		setIsLoggedIn(false);
-		navigate("/");
+		const confirm = window.confirm("Are you sure you want to log out?");
+		if (confirm) {
+			setIsLoggedIn(false);
+			navigate("/");
+		}
 	};
 
 	return (
@@ -32,10 +35,15 @@ function Nav({ children }) {
 							<NavLink to="/profile">Profile</NavLink>
 						</li>
 					)}
-					{isLoggedIn && <li onClick={handleLogout}>Logout</li>}
+					{isLoggedIn && (
+						<li onClick={handleLogout} className="hover:cursor-pointer">
+							Logout
+						</li>
+					)}
 				</ul>
 			</nav>
-			<div className="container">{children}</div>
+			<h1>{props?.title}</h1>
+			<div>{props?.children}</div>
 		</>
 	);
 }
