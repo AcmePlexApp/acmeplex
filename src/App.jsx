@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
 import Register from "./pages/Register";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
 	return (
@@ -77,6 +78,14 @@ function App() {
 				element={
 					<Nav title="Login">
 						<Login />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/success"
+				element={
+					<Nav>
+						<PaymentSuccess />
 					</Nav>
 				}
 			/>

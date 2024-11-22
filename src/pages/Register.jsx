@@ -1,11 +1,11 @@
-import UserInfoForm from "../components/UserInfoForm"
+import RegisterForm from "../components/RegisterForm"
 
 function Register({ children }) {
 
 	return (
 		<div>
 			<h1>Register</h1>
-			<UserInfoForm/>
+			<RegisterForm/>
 			{children}
 		</div>
 	);

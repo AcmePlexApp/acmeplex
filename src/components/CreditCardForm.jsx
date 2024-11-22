@@ -1,17 +1,19 @@
 import {useState} from "react";
 import "../Index.css"
+import { useNavigate } from "react-router-dom";
 
 
 function CreditCardForm(){
-    //Form data
+    //handling for form data
     const [formData, setFormData] = useState({
         fullName: "",
         cardNumber: "",
         cardExpiration: "",
         cvv: "",
-      });
+    });
 
-    //Handles changes to form data on event trigger
+    const navigate = useNavigate();
+
     const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -20,9 +22,22 @@ function CreditCardForm(){
     });
     };
 
+    const handleSubmit =(e) =>{
+        e.preventDefault();
+        console.log("Payment sumitted")
+        console.log(formData.fullName)
+        console.log(formData.cardNumber)
+        //place holder navigation
+        navigate("/success")
+        //User query string to handle rerouting to previous page afer logging in (protected pages)
+
+    }
+
+    
+
     return(
         <div className="infoform-div-container-centered">
-            <form className="ccForm-form-container">
+            <form className="ccForm-form-container" onSubmit={handleSubmit}>
                 <div className='flex flex-col items-center'>
                     <div className="mb-6 grid grid-cols-2 gap-4">
                         <div className="col-span-2 sm:col-span-1">
