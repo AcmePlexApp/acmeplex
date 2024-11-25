@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useNavTitle from "../hooks/useNavTitle";
 import useMovies from "../hooks/useMovies";
 import { useNavigate, useParams } from "react-router-dom";
-import { time24To12 } from "../utils/timeUtils";
+import { parseISODate } from "../utils/timeUtils";
 
 function MovieDetail() {
 	const { setNavTitle } = useNavTitle();
@@ -14,7 +14,6 @@ function MovieDetail() {
 		setMovie(movies.find((movie) => movie.id === parseInt(params.movieId)));
 		setNavTitle("Movie Detail for " + movie?.title);
 	}, [movies, params.movieId, setNavTitle, movie]);
-	console.log(movie);
 	return (
 		<div className="mt-0 pt-0">
 			<div className="mt-0 p-0">
@@ -40,7 +39,7 @@ function MovieDetail() {
 					<div className="flex flex-row flex-wrap my-0 py-0">
 						{e?.showtimes.map((showtime) => (
 							<button className="m-1 py-0 px-0.5" key={showtime.id}>
-								{time24To12(showtime.timeOfDay)}
+								{parseISODate(showtime.dateTime).time}
 							</button>
 						))}
 					</div>

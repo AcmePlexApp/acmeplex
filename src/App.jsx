@@ -28,10 +28,10 @@ function sampleMovies() {
 						name: "Theater 1",
 						movie: 1,
 						showtimes: [
-							{ id: 1, timeOfDay: "13:00:00" },
-							{ id: 2, timeOfDay: "16:00:00" },
-							{ id: 3, timeOfDay: "19:00:00" },
-							{ id: 4, timeOfDay: "21:00:00" },
+							{ id: 1, dateTime: "2024-11-23T13:00:00" },
+							{ id: 2, dateTime: "2024-11-23T16:00:00" },
+							{ id: 3, dateTime: "2024-11-23T19:00:00" },
+							{ id: 4, dateTime: "2024-11-23T21:00:00" },
 						],
 					},
 				],
@@ -48,9 +48,9 @@ function sampleMovies() {
 						name: "Theater 2",
 						movie: 2,
 						showtimes: [
-							{ id: 5, timeOfDay: "14:00:00" },
-							{ id: 6, timeOfDay: "17:00:00" },
-							{ id: 7, timeOfDay: "20:00:00" },
+							{ id: 5, dateTime: "2024-11-23T14:00:00" },
+							{ id: 6, dateTime: "2024-11-23T17:00:00" },
+							{ id: 7, dateTime: "2024-11-23T20:00:00" },
 						],
 					},
 				],
@@ -68,9 +68,9 @@ function sampleMovies() {
 						name: "Theater 3",
 						movie: 3,
 						showtimes: [
-							{ id: 8, timeOfDay: "15:00:00" },
-							{ id: 9, timeOfDay: "18:00:00" },
-							{ id: 10, timeOfDay: "21:00:00" },
+							{ id: 8, dateTime: "2024-11-23T15:00:00" },
+							{ id: 9, dateTime: "2024-11-23T18:00:00" },
+							{ id: 10, dateTime: "2024-11-23T21:00:00" },
 						],
 					},
 				],
@@ -88,10 +88,10 @@ function sampleMovies() {
 						name: "Theater 4",
 						movie: 4,
 						showtimes: [
-							{ id: 11, timeOfDay: "12:00:00" },
-							{ id: 12, timeOfDay: "15:00:00" },
-							{ id: 13, timeOfDay: "18:00:00" },
-							{ id: 14, timeOfDay: "21:00:00" },
+							{ id: 11, dateTime: "2024-11-23T12:00:00" },
+							{ id: 12, dateTime: "2024-11-23T15:00:00" },
+							{ id: 13, dateTime: "2024-11-23T18:00:00" },
+							{ id: 14, dateTime: "2024-11-23T21:00:00" },
 						],
 					},
 				],
@@ -109,10 +109,10 @@ function sampleMovies() {
 						name: "Theater 5",
 						movie: 5,
 						showtimes: [
-							{ id: 15, timeOfDay: "13:00:00" },
-							{ id: 16, timeOfDay: "16:00:00" },
-							{ id: 17, timeOfDay: "19:00:00" },
-							{ id: 18, timeOfDay: "22:00:00" },
+							{ id: 15, dateTime: "2024-11-23T13:00:00" },
+							{ id: 16, dateTime: "2024-11-23T16:00:00" },
+							{ id: 17, dateTime: "2024-11-23T19:00:00" },
+							{ id: 18, dateTime: "2024-11-23T22:00:00" },
 						],
 					},
 				],
@@ -130,9 +130,9 @@ function sampleMovies() {
 						name: "Theater 6",
 						movie: 6,
 						showtimes: [
-							{ id: 19, timeOfDay: "14:00:00" },
-							{ id: 20, timeOfDay: "17:00:00" },
-							{ id: 21, timeOfDay: "20:00:00" },
+							{ id: 19, dateTime: "2024-11-23T14:00:00" },
+							{ id: 20, dateTime: "2024-11-23T17:00:00" },
+							{ id: 21, dateTime: "2024-11-23T20:00:00" },
 						],
 					},
 				],
@@ -150,10 +150,10 @@ function sampleMovies() {
 						name: "Theater 7",
 						movie: 7,
 						showtimes: [
-							{ id: 22, timeOfDay: "13:00:00" },
-							{ id: 23, timeOfDay: "16:00:00" },
-							{ id: 24, timeOfDay: "19:00:00" },
-							{ id: 25, timeOfDay: "22:00:00" },
+							{ id: 22, dateTime: "2024-11-23T13:00:00" },
+							{ id: 23, dateTime: "2024-11-23T16:00:00" },
+							{ id: 24, dateTime: "2024-11-23T19:00:00" },
+							{ id: 25, dateTime: "2024-11-23T22:00:00" },
 						],
 					},
 				],
@@ -171,9 +171,9 @@ function sampleMovies() {
 						name: "Theater 8",
 						movie: 8,
 						showtimes: [
-							{ id: 26, timeOfDay: "14:00:00" },
-							{ id: 27, timeOfDay: "17:00:00" },
-							{ id: 28, timeOfDay: "20:00:00" },
+							{ id: 26, dateTime: "2024-11-23T14:00:00" },
+							{ id: 27, dateTime: "2024-11-23T17:00:00" },
+							{ id: 28, dateTime: "2024-11-23T20:00:00" },
 						],
 					},
 				],
@@ -191,10 +191,10 @@ function sampleMovies() {
 						name: "Theater 9",
 						movie: 9,
 						showtimes: [
-							{ id: 29, timeOfDay: "13:00:00" },
-							{ id: 30, timeOfDay: "16:00:00" },
-							{ id: 31, timeOfDay: "19:00:00" },
-							{ id: 32, timeOfDay: "22:00:00" },
+							{ id: 29, dateTime: "2024-11-23T13:00:00" },
+							{ id: 30, dateTime: "2024-11-23T16:00:00" },
+							{ id: 31, dateTime: "2024-11-23T19:00:00" },
+							{ id: 32, dateTime: "2024-11-23T22:00:00" },
 						],
 					},
 				],
@@ -212,10 +212,10 @@ function sampleMovies() {
 						name: "Theater 10",
 						movie: 10,
 						showtimes: [
-							{ id: 33, timeOfDay: "12:00:00" },
-							{ id: 34, timeOfDay: "15:00:00" },
-							{ id: 35, timeOfDay: "18:00:00" },
-							{ id: 36, timeOfDay: "21:00:00" },
+							{ id: 33, dateTime: "2024-11-23T12:00:00" },
+							{ id: 34, dateTime: "2024-11-23T15:00:00" },
+							{ id: 35, dateTime: "2024-11-23T18:00:00" },
+							{ id: 36, dateTime: "2024-11-23T21:00:00" },
 						],
 					},
 				],
@@ -227,6 +227,7 @@ function sampleMovies() {
 function getMovies() {
 	return sampleMovies().movies;
 }
+
 function App() {
 	const { navTitle } = useNavTitle();
 	const { movies, setMovies } = useMovies();
@@ -235,6 +236,9 @@ function App() {
 		const movies = getMovies();
 		setMovies(movies);
 	}, []);
+	useEffect(() => {
+		console.log(movies);
+	}, [movies]);
 
 	return (
 		<Routes>
