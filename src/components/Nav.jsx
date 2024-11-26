@@ -4,7 +4,6 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
-y;
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
