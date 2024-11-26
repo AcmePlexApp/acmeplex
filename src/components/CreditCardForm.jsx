@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 
 function CreditCardForm(){
-    //handling for form data
+
+    //Handling for form data
     const [formData, setFormData] = useState({
         fullName: "",
         cardNumber: "",
@@ -28,13 +29,11 @@ function CreditCardForm(){
         console.log(formData.fullName)
         console.log(formData.cardNumber)
         //place holder navigation
-        navigate("/success")
+        navigate("/payment/success")
         //User query string to handle rerouting to previous page afer logging in (protected pages)
 
     }
-
     
-
     return(
         <div className="infoform-div-container-centered">
             <form className="ccForm-form-container" onSubmit={handleSubmit}>
@@ -76,16 +75,15 @@ function CreditCardForm(){
                                 onChange={handleInputChange}
                                 pattern="^4[0-9]{12}(?:[0-9]{3})?$"
                                 required
+                                maxLength={16}
                             />
                         </div>
-                        <div>
+                        <div className="col-span-2 sm:col-span-1">
                             <label
                                 htmlFor="card-expiration-input"
-                                className="ccForm-label"
-                            >
+                                className="ccForm-label">
                                 Card expiration*
                             </label>
-                            <div className="relative">
                                 <input
                                 type="text"
                                 id="card-expiration-input"
@@ -93,28 +91,29 @@ function CreditCardForm(){
                                 value={formData.cardExpiration}
                                 onChange={handleInputChange}
                                 className="ccForm-field"
-                                placeholder="MM/YY"
+                                placeholder="MMYY"
                                 required
+                                pattern="^(0[2-9]|1[0-2])(\d{2})$"
                                 />
-                            </div>
                         </div>
-                        <div>
-                        <label
-                            htmlFor="cvv-input"
-                            className="ccForm-label"
-                        >
-                        CVV*
-                        </label>
-                        <input
-                            type="text"
-                            id="cvv-input"
-                            name="cvv"
-                            value={formData.cvv}
-                            onChange={handleInputChange}
-                            className="ccForm-field"
-                            placeholder="•••"
-                            required
-                        />
+                        <div className="col-span-2 sm:col-span-1">
+                            <label
+                                htmlFor="cvv-input"
+                                className="ccForm-label">
+                                CVV*
+                            </label>
+                            <input
+                                type="text"
+                                pattern="[0-9]{3}"
+                                id="cvv-input"
+                                name="cvv"
+                                value={formData.cvv}
+                                onChange={handleInputChange}
+                                className="ccForm-field"
+                                placeholder="•••"
+                                required
+                                maxLength={3}
+                            />
                         </div>
                     </div>
                     <button

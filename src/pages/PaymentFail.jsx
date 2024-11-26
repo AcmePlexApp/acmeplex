@@ -1,8 +1,8 @@
-import popcorn_success from "../assets/popcorn_success.png"
+import popcorn_fail from "../assets/popcorn_fail.png"
 import "../index.css"
 
 //Need to either pass payment amount from pay screen or get 
-function PaymentSuccess() {
+function PaymentFail() {
 //     const formData = {
 //         amountPaid: "",
 //         email: "",
@@ -12,12 +12,12 @@ function PaymentSuccess() {
 		<div className="infoform-div-container-centered">
             <div className="flex flex-col justify-start items-center pt-10">
                 <img
-                src={popcorn_success}
-                className="w-28 object-cover"
+                src={popcorn_fail}
+                className="h-32 object-cover"
                 >
                 </img>
                 <h1>
-                Payment Successful!
+                Payment Failed
                 </h1>
 		    </div>
             
@@ -25,4 +25,4 @@ function PaymentSuccess() {
 	);
 }
 
-export default PaymentSuccess;
+export default PaymentFail;

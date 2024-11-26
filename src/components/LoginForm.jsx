@@ -5,11 +5,10 @@ import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import {eye} from "react-icons-kit/feather/eye";
 import { useNavigate } from "react-router-dom";
 
-function RegisterForm(){
+function LoginForm(){
     //Handling for form data
     const[formData, setFormData] = useState({
         username: "",
-        email: "",
         password: ""
     })
 
@@ -69,22 +68,6 @@ function RegisterForm(){
                 </div>
                 <div className="infoform-div-container group">
                     <input
-                    className="infoform-input-field peer"
-                    type="email"
-                    id="floating_email"
-                    name = 'email'
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder=""
-                    required>
-                    </input>
-                    <label
-                    className="infoform-input-label peer"
-                    htmlFor="floating_firstname">Email Address
-                    </label>
-                </div> 
-                <div className="infoform-div-container group">
-                    <input
                     className="infoform-input-field peer pl-3 pr-10"
                     type={passwordType}
                     id="floating_password"
@@ -112,7 +95,7 @@ function RegisterForm(){
                 <button 
                     className="submit-button"
                     type="submit"
-                    >Register
+                    >Login
                 </button>
                 </div>
             </div>
@@ -120,4 +103,4 @@ function RegisterForm(){
     )
 }
 
-export default RegisterForm;
+export default LoginForm;

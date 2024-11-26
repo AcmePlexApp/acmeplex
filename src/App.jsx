@@ -10,6 +10,11 @@ import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
 import Register from "./pages/Register";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import EditProfile from "./pages/EditProfile";
+import PaymentFail from "./pages/PaymentFail";
+import EditPayment from "./pages/EditPayment";
+import Premium from "./pages/Premium";
+import Notifications from "./pages/Notifications";
 
 function App() {
 	return (
@@ -82,10 +87,50 @@ function App() {
 				}
 			/>
 			<Route
-				path="/success"
+				path="/payment/success"
 				element={
 					<Nav>
 						<PaymentSuccess />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/payment/fail"
+				element={
+					<Nav>
+						<PaymentFail />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/edit/userinfo"
+				element={
+					<Nav>
+						<EditProfile />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/edit/paymentinfo"
+				element={
+					<Nav>
+						<EditPayment />
+					</Nav>
+				}
+			/>
+			<Route
+				path="profile/premium"
+				element={
+					<Nav>
+						<Premium />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/notifications"
+				element={
+					<Nav>
+						<Notifications />
 					</Nav>
 				}
 			/>
