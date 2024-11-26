@@ -41,12 +41,13 @@ function Nav(props) {
 							</NavLink>
 							<Popup
 							open={isOpenPopup}
-							onClose={() => setIsOpenPopup(false)}
+							onClose={() => setIsOpenPopup()}
 							modal
 							closeOnDocumentClick
 							classNames = {{
 								overlay: "popup-overlay",
-								modal: "popup-modal"
+								modal: "popup-modal",
+								root: "popup-root bg-[#0f172a]"
 							}}
 							>
 								<Register/>

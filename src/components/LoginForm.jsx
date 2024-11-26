@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 function LoginForm(){
     //Handling for form data
     const[formData, setFormData] = useState({
-        username: "",
-        password: ""
+        login_username: "",
+        login_password: ""
     })
 
     const handleChange = (e) =>{
@@ -54,24 +54,24 @@ function LoginForm(){
                     <input
                     className="infoform-input-field peer"
                     type="username"
-                    id="floating_username"
-                    name="username"
-                    value={formData.username}
+                    id="login_username"
+                    name="login_username"
+                    value={formData.login_username}
                     onChange={handleChange}
                     placeholder=""
                     required>
                     </input>
                     <label
                     className="infoform-input-label peer"
-                    htmlFor="floating_lastname">Username
+                    htmlFor="login_username">Username
                     </label>
                 </div>
                 <div className="infoform-div-container group">
                     <input
                     className="infoform-input-field peer pl-3 pr-10"
                     type={passwordType}
-                    id="floating_password"
-                    name="password"
+                    id="login_password"
+                    name="login_password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder=""
@@ -79,7 +79,7 @@ function LoginForm(){
                     </input>
                     <label
                     className="infoform-input-label peer"
-                    htmlFor="floating_lastname">Password
+                    htmlFor="login_password">Password
                     </label>
                     <span
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
