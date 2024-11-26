@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-function TheatreDetail({ children }) {
+function TheaterDetail({ children }) {
 	const { theatreId } = useParams();
 	return (
 		<div>
@@ -10,4 +10,4 @@ function TheatreDetail({ children }) {
 	);
 }
 
-export default TheatreDetail;
+export default TheaterDetail;

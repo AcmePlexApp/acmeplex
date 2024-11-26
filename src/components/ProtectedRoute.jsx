@@ -1,15 +1,16 @@
 import { Navigate, useLocation } from "react-router-dom";
-import AppAPI from './AppAPI'
+import { useAuth } from "../hooks/useAuth";
 
-function ProtectedRoute({ token, children }) {
+function ProtectedRoute(props) {
 	const location = useLocation();
+	const { isLoggedIn } = useAuth();
 
-	if (!token && (!AppAPI.useTestServer)) {
+	if (!isLoggedIn) {
 		// Redirect to login page, preserving the path the user tried to access
 		return <Navigate to="/login" state={{ from: location }} replace />;
 	}
 
-	return children;
+	return props.children;
 }
 
 export default ProtectedRoute;
