@@ -1,6 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
+import Popup from "reactjs-popup";
+import "../index.css";
+import Register from "../pages/Register";
+import { useState } from "react";
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -17,6 +21,7 @@ function Nav(props) {
 			navigate("/");
 		}
 	};
+	const [isOpenPopup, setIsOpenPopup] = useState(false);
 
 	return (
 		<>
@@ -46,7 +51,23 @@ function Nav(props) {
 							</li>
 							{!isLoggedIn && (
 								<li>
-									<NavLink to="/login">Login</NavLink>
+									<NavLink
+										to="#"
+										onClick={() => setIsOpenPopup(true)}
+										className="text-blue-500 hover:text-blue-700">
+										Login
+									</NavLink>
+									<Popup
+										open={isOpenPopup}
+										onClose={() => setIsOpenPopup(false)}
+										modal
+										closeOnDocumentClick
+										classNames={{
+											overlay: "popup-overlay",
+											modal: "popup-modal",
+										}}>
+										<Register />
+									</Popup>
 								</li>
 							)}
 							{isLoggedIn && (

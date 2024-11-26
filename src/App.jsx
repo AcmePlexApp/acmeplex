@@ -257,6 +257,12 @@ import {
 // function getMovies() {
 // 	return sampleMovies().movies;
 // }
+import PaymentSuccess from "./pages/PaymentSuccess";
+import EditProfile from "./pages/EditProfile";
+import PaymentFail from "./pages/PaymentFail";
+import EditPayment from "./pages/EditPayment";
+import Premium from "./pages/Premium";
+import Notifications from "./pages/Notifications";
 
 function App() {
 	const { navTitle } = useNavTitle();
@@ -361,6 +367,54 @@ function App() {
 				element={
 					<Nav title={"Login"}>
 						<Login />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/payment/success"
+				element={
+					<Nav>
+						<PaymentSuccess />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/payment/fail"
+				element={
+					<Nav>
+						<PaymentFail />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/edit/userinfo"
+				element={
+					<Nav>
+						<EditProfile />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/edit/paymentinfo"
+				element={
+					<Nav>
+						<EditPayment />
+					</Nav>
+				}
+			/>
+			<Route
+				path="profile/premium"
+				element={
+					<Nav>
+						<Premium />
+					</Nav>
+				}
+			/>
+			<Route
+				path="/profile/notifications"
+				element={
+					<Nav>
+						<Notifications />
 					</Nav>
 				}
 			/>
