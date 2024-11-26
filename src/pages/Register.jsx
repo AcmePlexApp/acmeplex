@@ -12,9 +12,25 @@ function Register() {
 
 	return (
 		<div>
-			<h1>Register</h1>
-			<UserInfoForm />
-			{children}
+			<div className="flex items-center justify-center">
+				<TogglePill
+					label="Login"
+					isActive={activeButton === "button1"}
+					toggleState={() => toggleButton("button1")}
+					isLeft={true}
+				/>
+				<TogglePill
+					label="Register"
+					isActive={activeButton === "button2"}
+					toggleState={() => toggleButton("button2")}
+					isLeft={false}
+				/>
+			</div>
+			{activeButton === "button1" ? (
+				<LoginForm buttonName={"Login"} />
+			) : (
+				<RegisterForm buttonName={"Register"} />
+			)}
 		</div>
 	);
 }
