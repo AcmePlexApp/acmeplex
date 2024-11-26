@@ -20,7 +20,7 @@ function Nav(props) {
 
 	return (
 		<>
-			<div className="sticky top-0 mb-0">
+			<div className="sticky top-0 mb-0 z-20">
 				<nav>
 					<div className="m-0 p-0">
 						<div className="bg-primary-800 flex align-middle justify-center sm:hidden">
@@ -42,7 +42,7 @@ function Nav(props) {
 								<NavLink to="/movies">Movies</NavLink>
 							</li>
 							<li>
-								<NavLink to="/theatres">Theatres</NavLink>
+								<NavLink to="/theaters">Theaters</NavLink>
 							</li>
 							{!isLoggedIn && (
 								<li>
