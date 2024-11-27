@@ -3,8 +3,8 @@ const BASE_API_URL = "http://localhost:8080";
 const BASE_HEADERS = {
 	"Content-Type": "application/json",
 };
-export const TMDB_BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185";
-export const TMDB_BASE_BACKDROP_URL = "http://image.tmdb.org/t/p/w780";
+export const TMDB_BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w500";
+export const TMDB_BASE_BACKDROP_URL = "http://image.tmdb.org/t/p/w1280";
 export const getMovies = async () => {
 	const response = await fetch(`${BASE_API_URL}/movie`, {
 		headers: BASE_HEADERS,
@@ -13,33 +13,85 @@ export const getMovies = async () => {
 	return data;
 };
 
-export const mapTheaters = (movies) => {
+export const getSeats = async (showtimeId) => {
+	const response = await fetch(
+		`${BASE_API_URL}/theater/0/showtime/${showtimeId}/seats`,
+		{
+			headers: BASE_HEADERS,
+		}
+	);
+	const data = await response.json();
+	console.log("Seats data:", data);
+	return data;
+};
+
+export const mapTheatersAndShowtimes = (movies) => {
 	const theatersMap = {};
+	const showtimesMap = {};
+	const moviesMap = {};
 
 	movies.forEach((movie) => {
+		// Map the movie
+		moviesMap[movie.id] = {
+			id: movie.id,
+			title: movie.title,
+			description: movie.description,
+			releaseDate: movie.releaseDate,
+			posterURL: movie.posterURL,
+			backdropURL: movie.backdropURL,
+			theaters: [], // List of theaters with their showtimes
+		};
+
 		movie.theaters.forEach((theater) => {
+			// Ensure the theater exists in theatersMap
 			if (!theatersMap[theater.id]) {
 				theatersMap[theater.id] = {
 					id: theater.id,
 					name: theater.name,
-					movies: [],
+					movies: [], // List of movies with their showtimes
 				};
 			}
 
-			theatersMap[theater.id].movies.push({
-				id: movie.id,
-				title: movie.title,
-				description: movie.description,
-				durationInMinutes: movie.durationInMinutes,
-				releaseDate: movie.releaseDate,
-				showtimes: theater.showtimes,
+			// Map the showtimes for the movie in this theater
+			const showtimesForThisTheater = theater.showtimes.map(
+				(showtime, index) => {
+					const showtimeId =
+						showtime.id || `${movie.id}-${theater.id}-${index}`;
+					const mappedShowtime = {
+						id: showtimeId,
+						movieId: movie.id,
+						theaterId: theater.id,
+						dateTime: showtime.dateTime || `${showtime.startTime}`, // Use dateTime or fallback to startTime
+					};
+
+					// Add to showtimesMap
+					showtimesMap[showtimeId] = mappedShowtime;
+
+					return mappedShowtime; // Return the mapped showtime object
+				}
+			);
+
+			// Add showtimes and theater details to the movie
+			moviesMap[movie.id].theaters.push({
+				id: theater.id,
+				name: theater.name,
+				showtimes: showtimesForThisTheater,
 			});
+
+			// Add showtimes and movie details to the theater
+			if (!theatersMap[theater.id].movies.find((m) => m.id === movie.id)) {
+				theatersMap[theater.id].movies.push({
+					id: movie.id,
+					title: movie.title,
+					showtimes: showtimesForThisTheater,
+				});
+			}
 		});
 	});
 
-	// Convert map to an array
-	const theaters = Object.values(theatersMap);
-
-	console.log(theaters);
-	return theaters;
+	return {
+		movies: moviesMap,
+		theaters: theatersMap,
+		showtimes: showtimesMap,
+	};
 };

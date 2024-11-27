@@ -1,202 +1,107 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import useNavTitle from "../hooks/useNavTitle";
-import { useParams } from "react-router-dom";
-import useMovies from "../hooks/useMovies";
-
-const sampleSeats = [
-	{
-		id: 1,
-		seatRow: 1,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 10.99,
-	},
-	{
-		id: 2,
-		seatRow: 1,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 10.99,
-	},
-	{
-		id: 3,
-		seatRow: 1,
-		seatNumber: 3,
-		status: "INCART",
-		cost: 10.99,
-	},
-	{
-		id: 4,
-		seatRow: 1,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 10.99,
-	},
-	{
-		id: 5,
-		seatRow: 1,
-		seatNumber: 5,
-		status: "AVAILABLE",
-		cost: 10.99,
-	},
-	{
-		id: 6,
-		seatRow: 2,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 12.99,
-	},
-	{
-		id: 7,
-		seatRow: 2,
-		seatNumber: 2,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 8,
-		seatRow: 2,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 9,
-		seatRow: 2,
-		seatNumber: 4,
-		status: "INCART",
-		cost: 12.99,
-	},
-	{
-		id: 10,
-		seatRow: 2,
-		seatNumber: 5,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 11,
-		seatRow: 3,
-		seatNumber: 1,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 12,
-		seatRow: 3,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 14.99,
-	},
-	{
-		id: 13,
-		seatRow: 3,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 14,
-		seatRow: 3,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 15,
-		seatRow: 3,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 14.99,
-	},
-	{
-		id: 16,
-		seatRow: 4,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 15.99,
-	},
-	{
-		id: 17,
-		seatRow: 4,
-		seatNumber: 2,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 18,
-		seatRow: 4,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 19,
-		seatRow: 4,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 20,
-		seatRow: 4,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 15.99,
-	},
-	{
-		id: 21,
-		seatRow: 5,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 16.99,
-	},
-	{
-		id: 22,
-		seatRow: 5,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 16.99,
-	},
-	{
-		id: 23,
-		seatRow: 5,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 16.99,
-	},
-	{
-		id: 24,
-		seatRow: 5,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 16.99,
-	},
-	{
-		id: 25,
-		seatRow: 5,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 16.99,
-	},
-];
-
-const getSeats = () => {
-	return sampleSeats;
-};
+import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
+import { getSeats } from "../utils/APIUtils";
 
 function Seats() {
-	const [seats, setSeats] = useState([]);
-	useEffect(() => {
-		setSeats(getSeats());
-	}, []);
-	const { setNavTitle } = useNavTitle();
-	const { movies } = useMovies();
 	const params = useParams();
-	const selectedMovie = movies.find((movie) => movie.id === params.movieId);
-	setNavTitle(`Seats for ${selectedMovie.title} in ${selectedMovie.theater}`);
-	console.log(seats);
-	return <div>This is the Seats page</div>;
+	const { data } = useMovieTheaterShowtime();
+	const { setNavTitle } = useNavTitle();
+	const [seats, setSeats] = useState(null);
+	const [showtimeDetails, setShowtimeDetails] = useState(null);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		// Validate and locate the showtime
+		const showtimeId = parseInt(params.showtimeId, 10);
+		const showtime = data.showtimes[showtimeId];
+
+		if (!showtime) {
+			console.error(`Showtime with ID ${showtimeId} not found.`);
+			return;
+		}
+
+		// Fetch additional seat details if required (example placeholder)
+		async function fetchSeats() {
+			try {
+				const seatData = await getSeats(showtimeId);
+				setSeats(seatData);
+			} catch (error) {
+				console.error("Failed to fetch seats:", error);
+			}
+		}
+
+		fetchSeats();
+
+		// Set the showtime details and navigation title
+		const movie = data.movies[showtime.movieId];
+		const theater = data.theaters[showtime.theaterId];
+
+		if (movie && theater) {
+			setShowtimeDetails({ movie, theater, showtime });
+			setNavTitle(`Seats for ${movie.title} at ${theater.name}`);
+		} else {
+			console.error(
+				`Invalid data: Movie or Theater not found for Showtime ID ${showtimeId}.`
+			);
+		}
+	}, [params.showtimeId, data, setNavTitle]);
+
+	if (!showtimeDetails) {
+		return <div>Loading showtime details...</div>;
+	}
+
+	return (
+		<div className="flex flex-col items-center px-4 py-6 space-y-6">
+			{/* Back button at the top */}
+			<button
+				className="self-start px-4 py-2 text-white bg-blue-500 rounded-md"
+				onClick={() => navigate(-1)}>
+				&lt; Back
+			</button>
+
+			<h1 className="text-2xl font-bold">
+				{showtimeDetails.movie.title} at {showtimeDetails.theater.name}
+			</h1>
+			<p>
+				Showtime:{" "}
+				{new Date(showtimeDetails.showtime.dateTime).toLocaleString()}
+			</p>
+			<div className="w-full">
+				{seats ? (
+					<div className="flex flex-col items-center space-y-4">
+						<h2 className="text-lg font-semibold">Select Your Seats:</h2>
+						<div className="grid grid-cols-5 gap-2 md:gap-4">
+							{seats.map((seat) => (
+								<div
+									key={seat.id}
+									className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 flex items-center justify-center text-sm font-bold rounded cursor-pointer ${
+										seat.status === "AVAILABLE"
+											? "bg-green-500 text-white"
+											: seat.status === "INCART"
+											? "bg-yellow-500 text-white"
+											: "bg-red-500 text-white"
+									}`}
+									title={`Seat: ${seat.seatRow}-${seat.seatNumber}\nPrice: $${seat.cost}`}>
+									{seat.seatNumber}
+								</div>
+							))}
+						</div>
+					</div>
+				) : (
+					<p>Loading seats...</p>
+				)}
+			</div>
+
+			{/* Back button at the bottom */}
+			<button
+				className="px-4 py-2 text-white bg-blue-500 rounded-md"
+				onClick={() => navigate(-1)}>
+				&lt; Back
+			</button>
+		</div>
+	);
 }
 
 export default Seats;
