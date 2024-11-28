@@ -4,12 +4,12 @@ import {Icon} from "react-icons-kit";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import {eye} from "react-icons-kit/feather/eye";
 
-function EditProfileForm({isEditing}){
+function EditProfileForm({isEditing, apiData}){
     //Handling for form data
     const[formData, setFormData] = useState({
-        username: "",
-        email: "",
-        password: ""
+        username: apiData.username,
+        email: apiData.email,
+        password: apiData.password
     })
 
     const handleChange = (e) =>{
