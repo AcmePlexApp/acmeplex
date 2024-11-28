@@ -1,3 +1,3 @@
 import { createContext } from "react";
 // Create the context
-export const MoviesContext = createContext();
+export const TokenContext = createContext();

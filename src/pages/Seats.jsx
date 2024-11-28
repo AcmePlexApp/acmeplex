@@ -1,202 +1,177 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import useNavTitle from "../hooks/useNavTitle";
-import { useParams } from "react-router-dom";
-import useMovies from "../hooks/useMovies";
-
-const sampleSeats = [
-	{
-		id: 1,
-		seatRow: 1,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 10.99,
-	},
-	{
-		id: 2,
-		seatRow: 1,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 10.99,
-	},
-	{
-		id: 3,
-		seatRow: 1,
-		seatNumber: 3,
-		status: "INCART",
-		cost: 10.99,
-	},
-	{
-		id: 4,
-		seatRow: 1,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 10.99,
-	},
-	{
-		id: 5,
-		seatRow: 1,
-		seatNumber: 5,
-		status: "AVAILABLE",
-		cost: 10.99,
-	},
-	{
-		id: 6,
-		seatRow: 2,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 12.99,
-	},
-	{
-		id: 7,
-		seatRow: 2,
-		seatNumber: 2,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 8,
-		seatRow: 2,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 9,
-		seatRow: 2,
-		seatNumber: 4,
-		status: "INCART",
-		cost: 12.99,
-	},
-	{
-		id: 10,
-		seatRow: 2,
-		seatNumber: 5,
-		status: "AVAILABLE",
-		cost: 12.99,
-	},
-	{
-		id: 11,
-		seatRow: 3,
-		seatNumber: 1,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 12,
-		seatRow: 3,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 14.99,
-	},
-	{
-		id: 13,
-		seatRow: 3,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 14,
-		seatRow: 3,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 14.99,
-	},
-	{
-		id: 15,
-		seatRow: 3,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 14.99,
-	},
-	{
-		id: 16,
-		seatRow: 4,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 15.99,
-	},
-	{
-		id: 17,
-		seatRow: 4,
-		seatNumber: 2,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 18,
-		seatRow: 4,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 19,
-		seatRow: 4,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 15.99,
-	},
-	{
-		id: 20,
-		seatRow: 4,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 15.99,
-	},
-	{
-		id: 21,
-		seatRow: 5,
-		seatNumber: 1,
-		status: "BOOKED",
-		cost: 16.99,
-	},
-	{
-		id: 22,
-		seatRow: 5,
-		seatNumber: 2,
-		status: "BOOKED",
-		cost: 16.99,
-	},
-	{
-		id: 23,
-		seatRow: 5,
-		seatNumber: 3,
-		status: "AVAILABLE",
-		cost: 16.99,
-	},
-	{
-		id: 24,
-		seatRow: 5,
-		seatNumber: 4,
-		status: "AVAILABLE",
-		cost: 16.99,
-	},
-	{
-		id: 25,
-		seatRow: 5,
-		seatNumber: 5,
-		status: "INCART",
-		cost: 16.99,
-	},
-];
-
-const getSeats = () => {
-	return sampleSeats;
-};
+import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
+import { getSeats, BASE_API_URL, BASE_HEADERS } from "../utils/APIUtils";
+import { useAuth } from "../hooks/useAuth";
+import Popup from "reactjs-popup";
+import Register from "../pages/Register";
+import { useToken } from "../hooks/useToken";
 
 function Seats() {
-	const [seats, setSeats] = useState([]);
-	useEffect(() => {
-		setSeats(getSeats());
-	}, []);
-	const { setNavTitle } = useNavTitle();
-	const { movies } = useMovies();
 	const params = useParams();
-	const selectedMovie = movies.find((movie) => movie.id === params.movieId);
-	setNavTitle(`Seats for ${selectedMovie.title} in ${selectedMovie.theater}`);
-	console.log(seats);
-	return <div>This is the Seats page</div>;
+	const { data } = useMovieTheaterShowtime();
+	const { setNavTitle } = useNavTitle();
+	const [seats, setSeats] = useState(null);
+	const [showtimeDetails, setShowtimeDetails] = useState(null);
+	const showtimeId = parseInt(params.showtimeId, 10);
+	const showtime = data.showtimes[showtimeId];
+	const movie = data.movies[showtime.movieId];
+	const theater = data.theaters[showtime.theaterId];
+	const navigate = useNavigate();
+
+	const { isLoggedIn } = useAuth(); // Access auth state
+	const { token } = useToken();
+	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
+	const [selectedSeat, setSelectedSeat] = useState(null); // Track seat user clicked
+
+	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
+		[],
+		{
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+			hour12: true, // Set to `false` for 24-hour format
+		}
+	);
+
+	const postCart = async (showtimeId, seatId) => {
+		const response = await fetch(
+			`${BASE_API_URL}/user/selectseat/${seatId}`,
+			{
+				method: "POST",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ showtimeId, seatId }),
+			}
+		);
+		const data = await response.json();
+		console.log("Cart data:", data);
+		return data;
+	};
+
+	const handleSeatSelection = (seat) => () => {
+		setSelectedSeat(seat);
+		console.log("Logged in:", isLoggedIn);
+		console.log("Selected seat:", selectedSeat);
+		if (!isLoggedIn) {
+			console.log("User is not logged in. Opening login popup...");
+			setIsPopupOpen(true);
+			return;
+		}
+		if (seat.status === "AVAILABLE") {
+			console.log(
+				`Row ${seat.seatRow} Seat ${seat.seatNumber} for ${movie.title} in ${theater.name} on ${formattedShowtimeDate} is available. Booking...`
+			);
+			try {
+				const cartData = postCart(showtimeId, seat.id);
+				console.log("Cart data:", cartData);
+			} catch (error) {
+				console.error("Failed to book seat:", error);
+			}
+		} else {
+			console.log(
+				`Seat ${seat.seatRow}-${seat.seatNumber} is already booked.`
+			);
+		}
+	};
+
+	useEffect(() => {
+		// Fetch additional seat details if required (example placeholder)
+		async function fetchSeats() {
+			try {
+				const seatData = await getSeats(showtimeId);
+				setSeats(seatData);
+			} catch (error) {
+				console.error("Failed to fetch seats:", error);
+			}
+		}
+
+		fetchSeats();
+
+		// Set the showtime details and navigation title
+		const movie = data.movies[showtime.movieId];
+		const theater = data.theaters[showtime.theaterId];
+
+		if (movie && theater) {
+			setShowtimeDetails({ movie, theater, showtime });
+			setNavTitle(`Seats for ${movie.title} at ${theater.name}`);
+		} else {
+			console.error(
+				`Invalid data: Movie or Theater not found for Showtime ID ${showtimeId}.`
+			);
+		}
+	}, [showtime, showtimeId, data, setNavTitle]);
+
+	if (!showtimeDetails) {
+		return <div>Loading showtime details...</div>;
+	}
+
+	return (
+		<div className="flex flex-col items-center px-4 py-6">
+			{/* Back button at the top */}
+			<button
+				className="self-start px-4 py-2 text-white bg-blue-500 rounded-md"
+				onClick={() => navigate(-1)}>
+				&lt; Back
+			</button>
+
+			<h1 className="text-2xl font-bold">
+				{showtimeDetails.movie.title} at {showtimeDetails.theater.name}
+			</h1>
+			<p className="m-0 p-0">Showtime: {formattedShowtimeDate}</p>
+			<div className="w-full mt-0 p-0">
+				{seats ? (
+					<div className="flex flex-col items-center space-y-4">
+						<h2 className="text-lg font-semibold">Select Your Seats:</h2>
+						<div>
+							<div className="border-[0.125rem] border-gray-500 text-gray-500 text-center">
+								Screen
+							</div>
+							<div className="grid mt-0 grid-cols-5 gap-2 md:gap-4">
+								{seats.map((seat) => (
+									<button
+										key={seat.id}
+										onClick={handleSeatSelection(seat)}
+										className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 flex items-center justify-center text-sm md:text-lg font-bold rounded ${
+											seat.status === "AVAILABLE"
+												? "bg-green-500 cursor-pointer text-white"
+												: "bg-gray-600 text-gray-300"
+										}`}
+										title={`Row ${seat.seatRow}, Seat ${seat.seatNumber}\nPrice: $${seat.cost}\nStatus: ${seat.status}`}>
+										{seat.seatNumber}
+									</button>
+								))}
+							</div>
+						</div>
+					</div>
+				) : (
+					<p>Loading seats...</p>
+				)}
+			</div>
+
+			{/* Back button at the bottom */}
+			<button
+				className="px-4 py-2 text-white bg-blue-500 rounded-md"
+				onClick={() => navigate(-1)}>
+				&lt; Back
+			</button>
+			{/* Login popup */}
+			<Popup
+				open={isPopupOpen}
+				onClose={() => setIsPopupOpen(false)}
+				modal
+				closeOnDocumentClick
+				className="popup-modal">
+				<div>You must be logged in to book a seat.</div>
+				<Register onClose={() => setIsPopupOpen(false)} />
+			</Popup>
+		</div>
+	);
 }
 
 export default Seats;

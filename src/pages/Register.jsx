@@ -3,7 +3,7 @@ import LoginForm from "../components/LoginForm";
 import TogglePill from "../components/TogglePill";
 import { useState } from "react";
 
-function Register() {
+function Register(props) {
 	const [activeButton, setActiveButton] = useState("button1");
 
 	const toggleButton = (button) => {
@@ -27,9 +27,9 @@ function Register() {
 				/>
 			</div>
 			{activeButton === "button1" ? (
-				<LoginForm buttonName={"Login"} />
+				<LoginForm buttonName={"Login"} onClose={props.onClose} />
 			) : (
-				<RegisterForm buttonName={"Register"} />
+				<RegisterForm buttonName={"Register"} onClose={props.onClose} />
 			)}
 		</div>
 	);
