@@ -4,6 +4,7 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useAuth } from "../hooks/useAuth";
+import { postRegister } from "../utils/APIUtils";
 
 function RegisterForm(props) {
 	//Handling for form data
@@ -23,12 +24,20 @@ function RegisterForm(props) {
 		}));
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Form sumitted");
-		console.log(formData.firstname);
-		console.log(formData.lastname);
-		setIsLoggedIn(true);
+		console.log("Form submitted");
+		console.log(formData.username);
+		console.log(formData.email);
+		console.log(formData.password);
+		const token = await postRegister(
+			formData.username,
+			formData.email,
+			formData.password
+		);
+		if (token) {
+			setIsLoggedIn(true);
+		}
 		props.onClose();
 	};
 
@@ -101,7 +110,7 @@ function RegisterForm(props) {
 					<span
 						className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
 						onClick={handleToggle}>
-						<Icon class="mr-0" icon={icon} size={20} />
+						<Icon className="mr-0" icon={icon} size={20} />
 					</span>
 				</div>
 				<div className="infoform-div-container-centered">

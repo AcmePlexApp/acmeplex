@@ -4,6 +4,7 @@ import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useAuth } from "../hooks/useAuth";
+import { postLogin } from "../utils/APIUtils";
 
 function LoginForm(props) {
 	//Handling for form data
@@ -22,12 +23,15 @@ function LoginForm(props) {
 		}));
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Form sumitted");
-		console.log(formData.firstname);
-		console.log(formData.lastname);
-		setIsLoggedIn(true);
+		console.log("Form sumbitted");
+		console.log(formData.username);
+		console.log(formData.password);
+		const token = await postLogin(formData.username, formData.password);
+		if (token) {
+			setIsLoggedIn(true);
+		}
 		props.onClose();
 		//Navigation place holder
 		//User query string to handle rerouting to previous page afer logging in (protected pages)
@@ -86,7 +90,7 @@ function LoginForm(props) {
 					<span
 						className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
 						onClick={handleToggle}>
-						<Icon class="mr-0" icon={icon} size={20} />
+						<Icon className="mr-0" icon={icon} size={20} />
 					</span>
 				</div>
 				<div className="infoform-div-container-centered">

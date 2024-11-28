@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useNavTitle from "../hooks/useNavTitle";
 import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
-import { getSeats } from "../utils/APIUtils";
+import { getSeats, BASE_API_URL, BASE_HEADERS } from "../utils/APIUtils";
+import { useAuth } from "../hooks/useAuth";
+import Popup from "reactjs-popup";
+import Register from "../pages/Register";
+import { useToken } from "../hooks/useToken";
 
 function Seats() {
 	const params = useParams();
@@ -16,6 +20,11 @@ function Seats() {
 	const theater = data.theaters[showtime.theaterId];
 	const navigate = useNavigate();
 
+	const { isLoggedIn } = useAuth(); // Access auth state
+	const { token } = useToken();
+	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
+	const [selectedSeat, setSelectedSeat] = useState(null); // Track seat user clicked
+
 	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
 		[],
 		{
@@ -24,16 +33,46 @@ function Seats() {
 			day: "numeric",
 			hour: "2-digit",
 			minute: "2-digit",
-			hour12: true, // Optional: Set to `false` for 24-hour format
+			hour12: true, // Set to `false` for 24-hour format
 		}
 	);
 
+	const postCart = async (showtimeId, seatId) => {
+		const response = await fetch(
+			`${BASE_API_URL}/user/selectseat/${seatId}`,
+			{
+				method: "POST",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ showtimeId, seatId }),
+			}
+		);
+		const data = await response.json();
+		console.log("Cart data:", data);
+		return data;
+	};
+
 	const handleSeatSelection = (seat) => () => {
+		setSelectedSeat(seat);
+		console.log("Logged in:", isLoggedIn);
+		console.log("Selected seat:", selectedSeat);
+		if (!isLoggedIn) {
+			console.log("User is not logged in. Opening login popup...");
+			setIsPopupOpen(true);
+			return;
+		}
 		if (seat.status === "AVAILABLE") {
 			console.log(
 				`Row ${seat.seatRow} Seat ${seat.seatNumber} for ${movie.title} in ${theater.name} on ${formattedShowtimeDate} is available. Booking...`
 			);
-			// Perform booking logic here...
+			try {
+				const cartData = postCart(showtimeId, seat.id);
+				console.log("Cart data:", cartData);
+			} catch (error) {
+				console.error("Failed to book seat:", error);
+			}
 		} else {
 			console.log(
 				`Seat ${seat.seatRow}-${seat.seatNumber} is already booked.`
@@ -42,15 +81,6 @@ function Seats() {
 	};
 
 	useEffect(() => {
-		// Validate and locate the showtime
-		const showtimeId = parseInt(params.showtimeId, 10);
-		const showtime = data.showtimes[showtimeId];
-
-		if (!showtime) {
-			console.error(`Showtime with ID ${showtimeId} not found.`);
-			return;
-		}
-
 		// Fetch additional seat details if required (example placeholder)
 		async function fetchSeats() {
 			try {
@@ -75,7 +105,7 @@ function Seats() {
 				`Invalid data: Movie or Theater not found for Showtime ID ${showtimeId}.`
 			);
 		}
-	}, [params.showtimeId, data, setNavTitle]);
+	}, [showtime, showtimeId, data, setNavTitle]);
 
 	if (!showtimeDetails) {
 		return <div>Loading showtime details...</div>;
@@ -130,6 +160,16 @@ function Seats() {
 				onClick={() => navigate(-1)}>
 				&lt; Back
 			</button>
+			{/* Login popup */}
+			<Popup
+				open={isPopupOpen}
+				onClose={() => setIsPopupOpen(false)}
+				modal
+				closeOnDocumentClick
+				className="popup-modal">
+				<div>You must be logged in to book a seat.</div>
+				<Register onClose={() => setIsPopupOpen(false)} />
+			</Popup>
 		</div>
 	);
 }
