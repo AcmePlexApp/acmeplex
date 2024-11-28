@@ -15,13 +15,35 @@ export const getMovies = async () => {
 
 export const getSeats = async (showtimeId) => {
 	const response = await fetch(
-		`${BASE_API_URL}/theater/0/showtime/${showtimeId}/seats`,
+		`${BASE_API_URL}/theater/showtime/${showtimeId}/seats`,
 		{
 			headers: BASE_HEADERS,
 		}
 	);
 	const data = await response.json();
 	console.log("Seats data:", data);
+	return data;
+};
+
+export const postAuth = async (username, password) => {
+	const response = await fetch(`${BASE_API_URL}/auth`, {
+		method: "POST",
+		headers: BASE_HEADERS,
+		body: JSON.stringify({ username, password }),
+	});
+	const data = await response.json();
+	console.log("Auth data:", data);
+	return data;
+};
+
+export const postRegister = async (username, password) => {
+	const response = await fetch(`${BASE_API_URL}/user`, {
+		method: "POST",
+		headers: BASE_HEADERS,
+		body: JSON.stringify({ username, password }),
+	});
+	const data = await response.json();
+	console.log("Register data:", data);
 	return data;
 };
 

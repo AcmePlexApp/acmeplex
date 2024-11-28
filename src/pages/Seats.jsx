@@ -10,7 +10,36 @@ function Seats() {
 	const { setNavTitle } = useNavTitle();
 	const [seats, setSeats] = useState(null);
 	const [showtimeDetails, setShowtimeDetails] = useState(null);
+	const showtimeId = parseInt(params.showtimeId, 10);
+	const showtime = data.showtimes[showtimeId];
+	const movie = data.movies[showtime.movieId];
+	const theater = data.theaters[showtime.theaterId];
 	const navigate = useNavigate();
+
+	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
+		[],
+		{
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+			hour12: true, // Optional: Set to `false` for 24-hour format
+		}
+	);
+
+	const handleSeatSelection = (seat) => () => {
+		if (seat.status === "AVAILABLE") {
+			console.log(
+				`Row ${seat.seatRow} Seat ${seat.seatNumber} for ${movie.title} in ${theater.name} on ${formattedShowtimeDate} is available. Booking...`
+			);
+			// Perform booking logic here...
+		} else {
+			console.log(
+				`Seat ${seat.seatRow}-${seat.seatNumber} is already booked.`
+			);
+		}
+	};
 
 	useEffect(() => {
 		// Validate and locate the showtime
@@ -53,7 +82,7 @@ function Seats() {
 	}
 
 	return (
-		<div className="flex flex-col items-center px-4 py-6 space-y-6">
+		<div className="flex flex-col items-center px-4 py-6">
 			{/* Back button at the top */}
 			<button
 				className="self-start px-4 py-2 text-white bg-blue-500 rounded-md"
@@ -64,29 +93,30 @@ function Seats() {
 			<h1 className="text-2xl font-bold">
 				{showtimeDetails.movie.title} at {showtimeDetails.theater.name}
 			</h1>
-			<p>
-				Showtime:{" "}
-				{new Date(showtimeDetails.showtime.dateTime).toLocaleString()}
-			</p>
-			<div className="w-full">
+			<p className="m-0 p-0">Showtime: {formattedShowtimeDate}</p>
+			<div className="w-full mt-0 p-0">
 				{seats ? (
 					<div className="flex flex-col items-center space-y-4">
 						<h2 className="text-lg font-semibold">Select Your Seats:</h2>
-						<div className="grid grid-cols-5 gap-2 md:gap-4">
-							{seats.map((seat) => (
-								<div
-									key={seat.id}
-									className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 flex items-center justify-center text-sm font-bold rounded cursor-pointer ${
-										seat.status === "AVAILABLE"
-											? "bg-green-500 text-white"
-											: seat.status === "INCART"
-											? "bg-yellow-500 text-white"
-											: "bg-red-500 text-white"
-									}`}
-									title={`Seat: ${seat.seatRow}-${seat.seatNumber}\nPrice: $${seat.cost}`}>
-									{seat.seatNumber}
-								</div>
-							))}
+						<div>
+							<div className="border-[0.125rem] border-gray-500 text-gray-500 text-center">
+								Screen
+							</div>
+							<div className="grid mt-0 grid-cols-5 gap-2 md:gap-4">
+								{seats.map((seat) => (
+									<button
+										key={seat.id}
+										onClick={handleSeatSelection(seat)}
+										className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 flex items-center justify-center text-sm md:text-lg font-bold rounded ${
+											seat.status === "AVAILABLE"
+												? "bg-green-500 cursor-pointer text-white"
+												: "bg-gray-600 text-gray-300"
+										}`}
+										title={`Row ${seat.seatRow}, Seat ${seat.seatNumber}\nPrice: $${seat.cost}\nStatus: ${seat.status}`}>
+										{seat.seatNumber}
+									</button>
+								))}
+							</div>
 						</div>
 					</div>
 				) : (

@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
 import Popup from "reactjs-popup";
@@ -12,12 +12,10 @@ function Nav(props) {
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
 	};
-	const navigate = useNavigate();
 	const handleLogout = () => {
 		const confirm = window.confirm("Are you sure you want to log out?");
 		if (confirm) {
 			setIsLoggedIn(false);
-			navigate("/");
 		}
 	};
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -26,8 +24,8 @@ function Nav(props) {
 		<>
 			<div className="sticky top-0 mb-0 z-20">
 				<nav>
-					<div className="m-0 p-0">
-						<div className="bg-primary-800 flex align-middle justify-center sm:hidden">
+					<div className="m-0 p-0 bg-primary-800">
+						<div className="bg-primary-800 flex flex-col align-middle justify-center sm:hidden">
 							<button
 								className="text-white bg-primary-800"
 								onClick={toggleMenu}>
@@ -65,7 +63,7 @@ function Nav(props) {
 											overlay: "popup-overlay",
 											modal: "popup-modal",
 										}}>
-										<Register />
+										<Register onClose={() => setIsOpenPopup(false)} />
 									</Popup>
 								</li>
 							)}
