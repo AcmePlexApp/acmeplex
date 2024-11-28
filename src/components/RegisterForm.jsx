@@ -5,9 +5,11 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useAuth } from "../hooks/useAuth";
 import { postRegister } from "../utils/APIUtils";
+import { useToken } from "../hooks/useToken";
 
 function RegisterForm(props) {
 	//Handling for form data
+	const { setToken } = useToken();
 	const [formData, setFormData] = useState({
 		username: "",
 		email: "",
@@ -37,6 +39,7 @@ function RegisterForm(props) {
 		);
 		if (token) {
 			setIsLoggedIn(true);
+			setToken(token.token);
 		}
 		props.onClose();
 	};

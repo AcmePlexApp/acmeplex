@@ -7,11 +7,13 @@ import { useAuth } from "../hooks/useAuth";
 import Popup from "reactjs-popup";
 import Register from "../pages/Register";
 import { useToken } from "../hooks/useToken";
+import { useCart } from "../hooks/useCart";
 
 function Seats() {
 	const params = useParams();
 	const { data } = useMovieTheaterShowtime();
 	const { setNavTitle } = useNavTitle();
+	const { cart, setCart } = useCart();
 	const [seats, setSeats] = useState(null);
 	const [showtimeDetails, setShowtimeDetails] = useState(null);
 	const showtimeId = parseInt(params.showtimeId, 10);
@@ -37,7 +39,8 @@ function Seats() {
 		}
 	);
 
-	const postCart = async (showtimeId, seatId) => {
+	const postCart = async (seatId) => {
+		console.log("Token Before PostCart:", token);
 		const response = await fetch(
 			`${BASE_API_URL}/user/selectseat/${seatId}`,
 			{
@@ -46,11 +49,16 @@ function Seats() {
 					...BASE_HEADERS,
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ showtimeId, seatId }),
 			}
 		);
-		const data = await response.json();
-		console.log("Cart data:", data);
+		const data = await response;
+		console.log("postCart Response Data:", data.text());
+		if (data.ok) {
+			console.log("Seat booked successfully.");
+			setCart((prevCart) => [...prevCart, seatId]);
+		} else {
+			console.error("Failed to book seat.");
+		}
 		return data;
 	};
 
@@ -68,7 +76,7 @@ function Seats() {
 				`Row ${seat.seatRow} Seat ${seat.seatNumber} for ${movie.title} in ${theater.name} on ${formattedShowtimeDate} is available. Booking...`
 			);
 			try {
-				const cartData = postCart(showtimeId, seat.id);
+				const cartData = postCart(seat.id);
 				console.log("Cart data:", cartData);
 			} catch (error) {
 				console.error("Failed to book seat:", error);
@@ -105,7 +113,7 @@ function Seats() {
 				`Invalid data: Movie or Theater not found for Showtime ID ${showtimeId}.`
 			);
 		}
-	}, [showtime, showtimeId, data, setNavTitle]);
+	}, [showtime, showtimeId, data, setNavTitle, cart]);
 
 	if (!showtimeDetails) {
 		return <div>Loading showtime details...</div>;
