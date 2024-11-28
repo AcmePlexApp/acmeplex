@@ -18,14 +18,14 @@ function Seats() {
 	const [showtimeDetails, setShowtimeDetails] = useState(null);
 	const showtimeId = parseInt(params.showtimeId, 10);
 	const showtime = data.showtimes[showtimeId];
-	const movie = data.movies[showtime.movieId];
-	const theater = data.theaters[showtime.theaterId];
+	// const movie = data.movies[showtime.movieId];
+	// const theater = data.theaters[showtime.theaterId];
 	const navigate = useNavigate();
 
 	const { isLoggedIn } = useAuth(); // Access auth state
 	const { token } = useToken();
 	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
-	const [selectedSeat, setSelectedSeat] = useState(null); // Track seat user clicked
+	// const [selectedSeat, setSelectedSeat ] = useState(null); // Track seat user clicked
 
 	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
 		[],
@@ -39,53 +39,119 @@ function Seats() {
 		}
 	);
 
-	const postCart = async (seatId) => {
-		console.log("Token Before PostCart:", token);
-		const response = await fetch(
-			`${BASE_API_URL}/user/selectseat/${seatId}`,
-			{
-				method: "POST",
+	const refreshCart = async () => {
+		try {
+			const response = await fetch(`${BASE_API_URL}/user/cart`, {
 				headers: {
 					...BASE_HEADERS,
 					Authorization: `Bearer ${token}`,
 				},
-			}
-		);
-		const data = await response;
-		console.log("postCart Response Data:", data.text());
-		if (data.ok) {
-			console.log("Seat booked successfully.");
-			setCart((prevCart) => [...prevCart, seatId]);
-		} else {
-			console.error("Failed to book seat.");
+			});
+			const cartData = await response.json();
+			setCart(cartData);
+		} catch (error) {
+			console.error("Failed to fetch cart:", error.message);
 		}
-		return data;
 	};
 
-	const handleSeatSelection = (seat) => () => {
-		setSelectedSeat(seat);
-		console.log("Logged in:", isLoggedIn);
-		console.log("Selected seat:", selectedSeat);
+	const deleteSeatFromCart = async (seatId) => {
+		try {
+			// Find the ticket id corresponding to the seatId
+			const ticket = cart.find((item) => item.seat.id === seatId);
+			if (!ticket) {
+				throw new Error("Ticket not found for the provided seat ID.");
+			}
+
+			const response = await fetch(
+				`${BASE_API_URL}/user/removeticket/${ticket.id}`, // Use the ticket id here
+				{
+					method: "DELETE",
+					headers: {
+						...BASE_HEADERS,
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			// Check if the response is successful
+			if (response.ok) {
+				const message = await response.text(); // Await the text content of the response
+				console.log("Success message:", message);
+				await refreshCart(); // Refresh cart after successful deletion
+				return message; // Return the success message
+			} else {
+				// Handle errors
+				const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+				throw new Error(errorMessage || "An unexpected error occurred.");
+			}
+		} catch (error) {
+			console.error("Failed to remove seat:", error.message);
+			throw error; // Re-throw the error for higher-level handling
+		}
+	};
+
+	const postCart = async (seatId) => {
+		try {
+			const response = await fetch(
+				`${BASE_API_URL}/user/selectseat/${seatId}`,
+				{
+					method: "POST",
+					headers: {
+						...BASE_HEADERS,
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+
+			// Check if the response is successful
+			if (response.ok) {
+				const message = await response.text(); // Await the text content of the response
+				console.log("Success message:", message);
+				await refreshCart();
+				return message; // Return the success message
+			} else {
+				// Handle errors
+				const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+				throw new Error(errorMessage || "An unexpected error occurred.");
+			}
+		} catch (error) {
+			console.error("Failed to book seat:", error.message);
+			throw error; // Re-throw the error for higher-level handling
+		}
+	};
+
+	const handleSeatSelection = (seat) => async () => {
+		console.log("Seat selected:", seat);
+		console.log("Cart:", cart);
 		if (!isLoggedIn) {
-			console.log("User is not logged in. Opening login popup...");
 			setIsPopupOpen(true);
 			return;
 		}
-		if (seat.status === "AVAILABLE") {
-			console.log(
-				`Row ${seat.seatRow} Seat ${seat.seatNumber} for ${movie.title} in ${theater.name} on ${formattedShowtimeDate} is available. Booking...`
-			);
+		if (isSeatInCart(seat.id)) {
 			try {
-				const cartData = postCart(seat.id);
-				console.log("Cart data:", cartData);
+				const successMessage = await deleteSeatFromCart(seat.id);
+				console.log("Seat removed successfully:", successMessage);
 			} catch (error) {
-				console.error("Failed to book seat:", error);
+				console.error("Error removing seat:", error.message);
 			}
+			return;
+		} else if (seat.status === "AVAILABLE") {
+			try {
+				const successMessage = await postCart(seat.id);
+				console.log("Seat booked successfully:", successMessage);
+			} catch (error) {
+				console.error("Error booking seat:", error.message);
+			}
+			return;
+		} else if (seat.status === "BOOKED" || seat.status === "INCART") {
+			console.log("Seat is already booked.");
 		} else {
-			console.log(
-				`Seat ${seat.seatRow}-${seat.seatNumber} is already booked.`
-			);
+			console.log("Unknwn seat status:", seat.status);
 		}
+	};
+
+	const isSeatInCart = (seatId) => {
+		return cart ? cart.some((item) => item.seat.id === seatId) : false;
 	};
 
 	useEffect(() => {
@@ -113,7 +179,18 @@ function Seats() {
 				`Invalid data: Movie or Theater not found for Showtime ID ${showtimeId}.`
 			);
 		}
-	}, [showtime, showtimeId, data, setNavTitle, cart]);
+	}, [showtime, showtimeId, data, setNavTitle]);
+
+	/* eslint-disable react-hooks/exhaustive-deps */
+	useEffect(() => {
+		async function fetchCart() {
+			if (isLoggedIn) {
+				await refreshCart();
+			}
+		}
+		fetchCart();
+		console.log("Cart:", cart);
+	}, []);
 
 	if (!showtimeDetails) {
 		return <div>Loading showtime details...</div>;
@@ -146,11 +223,13 @@ function Seats() {
 										key={seat.id}
 										onClick={handleSeatSelection(seat)}
 										className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 flex items-center justify-center text-sm md:text-lg font-bold rounded ${
-											seat.status === "AVAILABLE"
+											isSeatInCart(seat.id)
+												? "bg-blue-500 text-white"
+												: seat.status === "AVAILABLE"
 												? "bg-green-500 cursor-pointer text-white"
-												: "bg-gray-600 text-gray-300"
+												: "bg-gray-600 cursor-not-allowed disabled text-gray-300"
 										}`}
-										title={`Row ${seat.seatRow}, Seat ${seat.seatNumber}\nPrice: $${seat.cost}\nStatus: ${seat.status}`}>
+										title={`ID: ${seat.id}\nRow ${seat.seatRow}, Seat ${seat.seatNumber}\nPrice: $${seat.cost}\nStatus: ${seat.status}`}>
 										{seat.seatNumber}
 									</button>
 								))}
