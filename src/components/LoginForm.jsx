@@ -5,9 +5,11 @@ import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { useAuth } from "../hooks/useAuth";
 import { postLogin } from "../utils/APIUtils";
+import { useToken } from "../hooks/useToken";
 
 function LoginForm(props) {
 	//Handling for form data
+	const { setToken } = useToken();
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -31,6 +33,7 @@ function LoginForm(props) {
 		const token = await postLogin(formData.username, formData.password);
 		if (token) {
 			setIsLoggedIn(true);
+			setToken(token.token);
 		}
 		props.onClose();
 		//Navigation place holder
