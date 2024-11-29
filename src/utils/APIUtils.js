@@ -13,6 +13,21 @@ export const getMovies = async () => {
 	return data;
 };
 
+export const getCart = async (token, setCart) => {
+	try {
+		const response = await fetch(`${BASE_API_URL}/user/cart`, {
+			headers: {
+				...BASE_HEADERS,
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		const cartData = await response.json();
+		setCart(cartData);
+	} catch (error) {
+		console.error("Failed to fetch cart:", error.message);
+	}
+};
+
 export const getSeats = async (showtimeId) => {
 	const response = await fetch(
 		`${BASE_API_URL}/theater/showtime/${showtimeId}/seats`,
@@ -97,23 +112,113 @@ export const mapTheatersAndShowtimes = (movies) => {
 };
 
 export const postLogin = async (username, password) => {
-	const response = await fetch(`${BASE_API_URL}/auth/login`, {
-		method: "POST",
-		headers: BASE_HEADERS,
-		body: JSON.stringify({ username, password }),
-	});
-	const data = await response.json();
-	console.log("Auth data:", data);
-	return data;
+	try {
+		const response = await fetch(`${BASE_API_URL}/auth/login`, {
+			method: "POST",
+			headers: BASE_HEADERS,
+			body: JSON.stringify({ username, password }),
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text(); // Handle plain text error responses
+			console.error("Login failed:", errorText);
+			throw new Error(errorText || "Login failed.");
+		}
+
+		const data = await response.json(); // Parse JSON if response is OK
+		console.log("Auth data:", data);
+		return data;
+	} catch (error) {
+		console.error("Error during login:", error.message);
+		throw error; // Re-throw the error to be handled by the caller
+	}
 };
 
 export const postRegister = async (username, email, password) => {
-	const response = await fetch(`${BASE_API_URL}/auth/create`, {
-		method: "POST",
-		headers: BASE_HEADERS,
-		body: JSON.stringify({ username, email, password }),
-	});
-	const data = await response.json();
-	console.log("Register data:", data);
-	return data;
+	try {
+		const response = await fetch(`${BASE_API_URL}/auth/create`, {
+			method: "POST",
+			headers: BASE_HEADERS,
+			body: JSON.stringify({ username, email, password }),
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text(); // Handle plain text error responses
+			console.error("Registration failed:", errorText);
+			throw new Error(errorText || "Registration failed.");
+		}
+
+		const data = await response.json(); // Parse JSON if response is OK
+		console.log("Register data:", data);
+		return data;
+	} catch (error) {
+		console.error("Error during registration:", error.message);
+		throw error; // Re-throw the error to be handled by the caller
+	}
+};
+
+export const postCart = async (seatId, token, setCart) => {
+	try {
+		const response = await fetch(
+			`${BASE_API_URL}/user/selectseat/${seatId}`,
+			{
+				method: "POST",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		// Check if the response is successful
+		if (response.ok) {
+			const message = await response.text(); // Await the text content of the response
+			console.log("Success message:", message);
+			await getCart(token, setCart); // Refresh cart after successful booking
+			return message; // Return the success message
+		} else {
+			// Handle errors
+			const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+			throw new Error(errorMessage || "An unexpected error occurred.");
+		}
+	} catch (error) {
+		console.error("Failed to book seat:", error.message);
+		throw error; // Re-throw the error for higher-level handling
+	}
+};
+
+export const deleteSeatFromCart = async (seatId, token, cart, setCart) => {
+	try {
+		// Find the ticket id corresponding to the seatId
+		const ticket = cart.find((item) => item.seat.id === seatId);
+		if (!ticket) {
+			throw new Error("Ticket not found for the provided seat ID.");
+		}
+
+		const response = await fetch(
+			`${BASE_API_URL}/user/removeticket/${ticket.id}`, // Use the ticket id here
+			{
+				method: "DELETE",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		// Check if the response is successful
+		if (response.ok) {
+			const message = await response.text(); // Await the text content of the response
+			console.log("Success message:", message);
+			await getCart(token, setCart); // Refresh cart after successful deletion
+			return message; // Return the success message
+		} else {
+			// Handle errors
+			const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+			throw new Error(errorMessage || "An unexpected error occurred.");
+		}
+	} catch (error) {
+		console.error("Failed to remove seat:", error.message);
+		throw error; // Re-throw the error for higher-level handling
+	}
 };
