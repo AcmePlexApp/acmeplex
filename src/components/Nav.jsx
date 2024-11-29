@@ -5,6 +5,7 @@ import { useCart } from "../hooks/useCart";
 import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
+import { postLogout } from "../utils/APIUtils";
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -20,6 +21,7 @@ function Nav(props) {
 			setIsLoggedIn(false);
 			setCart([]);
 			localStorage.clear();
+			postLogout();
 		}
 	};
 	const [isOpenPopup, setIsOpenPopup] = useState(false);

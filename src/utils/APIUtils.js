@@ -40,6 +40,7 @@ export const getSeats = async (showtimeId) => {
 	return data;
 };
 
+
 export const mapTheatersAndShowtimes = (movies) => {
 	const theatersMap = {};
 	const showtimesMap = {};
@@ -222,3 +223,35 @@ export const deleteSeatFromCart = async (seatId, token, cart, setCart) => {
 		throw error; // Re-throw the error for higher-level handling
 	}
 };
+
+
+export const postLogout = async () => {
+	console.log("postLogout Called")
+	const response = await fetch(
+		`${BASE_API_URL}/auth/logout`,
+		{
+			headers:{
+			...BASE_HEADERS,
+			},
+			method: "POST",
+		});
+	const data = await response.text();
+	console.log("Logout data:", data);
+	return data
+}
+
+
+
+export const getUser = async () => {
+	const response = await fetch(
+		`${BASE_API_URL}/user`,
+		{
+			headers: BASE_HEADERS,
+			method: "GET",
+		}
+	);
+	const data = await response.json();
+	console.log("User data:", data);
+	return data;
+}
+
