@@ -55,7 +55,6 @@ function EditProfile({chlildren}) {
         </RedirectButton>
             <div>
                 <EditProfileForm
-                 isEditing={false}
                  apiData={userData}
                  />
 

@@ -1,126 +1,114 @@
-import {useState} from "react";
+import {BASE_API_URL, BASE_HEADERS } from "../utils/APIUtils";
+import { useToken } from "../hooks/useToken";
 import "../index.css"
-import {Icon} from "react-icons-kit";
-import {eyeOff} from "react-icons-kit/feather/eyeOff";
-import {eye} from "react-icons-kit/feather/eye";
+import { useAuth } from "../hooks/useAuth";
 
-function EditProfileForm({isEditing, apiData}){
-    //Handling for form data
-    const[formData, setFormData] = useState({
-        username: apiData.username,
-        email: apiData.email,
-        password: apiData.password
-    })
 
-    const handleChange = (e) =>{
-        const{name, value} = e.target;
-        setFormData((prevState) =>({
-            ...prevState,
-            [name]: value
-        }));
-    };  
-    
-    const handleSubmit =(e) =>{
-        e.preventDefault();
-        console.log("handleSubmit called");
-        //If edit mode is true, button will submit information
-        if (editMode == true){
-            //Submit info to api
-        }   
-        setEditMode((prevState => (!prevState)))
-    }
+
+function EditProfileForm({apiData}){
+
+    const { isLoggedIn, setIsLoggedIn } = useAuth();
+
+    const handleDelete =() =>{
+        const confirm = window.confirm("Are you sure you want to delete this user? This is permanent, all credits will be lost!");
+		if (confirm) {
+			deleteUser();
+            if(isLoggedIn){
+                setIsLoggedIn(false);
+            };
+		};
+    };
 
     //Handling for password visibility
-    const[icon, setIcon] = useState(eyeOff);
-    const[passwordType, setPasswordType] = useState("password")
+    // const[icon, setIcon] = useState(eyeOff);
+    // const[passwordType, setPasswordType] = useState("password")
 
-    const handleToggle = () =>{
-        if(passwordType=="password"){
-            setIcon(eye);
-            setPasswordType("text");
-        }
-        else{
-            setIcon(eyeOff)
-            setPasswordType("password")
-        }
-    }
+    // const handleToggle = () =>{
+    //     if(passwordType=="password"){
+    //         setIcon(eye);
+    //         setPasswordType("text");
+    //     }
+    //     else{
+    //         setIcon(eyeOff)
+    //         setPasswordType("password")
+    //     }
+    // }
+    //Handling profile deletion
+    const deleteUser = async () => {
+		try {
+			const response = await fetch(
+				`${BASE_API_URL}/user`,
+				{
+					method: "DELETE",
+					headers: {
+						...BASE_HEADERS,
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-    //Handling of edit mode
-    const [editMode, setEditMode] = useState(isEditing)
+			// Check if the response is successful
+			if (response.ok) {
+				console.log('User deleted');
+                return
+			} else {
+				// Handle errors
+				const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+				throw new Error(errorMessage || "An unexpected error occurred.");
+			}
+		} catch (error) {
+			console.error("Failed tp delete:", error.message);
+			throw error; // Re-throw the error for higher-level handling
+		}
+	};
+    const { token } = useToken();
 
+   
 
     return(
 
      <div>
-        <form className= "max-w-md mx-auto rounded-lg p-4 shadow-sm sm:p-6 lg:max-w-xl lg:p-8" onSubmit={handleSubmit}>
+        <form className= "max-w-md mx-auto rounded-lg p-4 shadow-sm sm:p-6 lg:max-w-xl lg:p-8" onSubmit={handleDelete}>
             <div>
-                <div className="infoform-div-container group">
-                    {editMode ? (
-                        <input
-                        className="infoform-input-field-editable peer"
-                        type="username"
-                        id="floating_username"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        placeholder=""
-                        required>
-                        </input>
-                        ):
+                <div className="infoform-div-container group">  
                         <p
                         className="infoform-input-field peer"
                         type="text">
-                            {formData.username}
+                            {apiData.username}
                         </p>
-                    }
-                    <label
+                   <label
                     className="infoform-input-label peer"
                     htmlFor="floating_lastname">Username
                     </label>
                 </div>
                 <div className="infoform-div-container group">
-                    {editMode ? (
-                        <input
-                        className="infoform-input-field-editable peer"
-                        type="email"
-                        id="floating_email"
-                        name = 'email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder=""
-                        required>
-                        </input>
-                        ):
                         <p
                         className="infoform-input-field peer"
                         type="email">
-                            {formData.email}
+                            {apiData.email}
                         </p>
-                    }
                     <label
                     className="infoform-input-label peer"
                     htmlFor="floating_firstname">Email Address
                     </label>
-                </div> 
+                </div>
                 <div className="infoform-div-container group">
-                    {editMode? (
-                        <input
-                        className="infoform-input-field-editable peer pl-3 pr-10"
-                        type={passwordType}
-                        id="floating_password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder=""
-                        required>
-                        </input>
-                    ):
+                        <p
+                        className="infoform-input-field peer"
+                        type="credits">
+                            {apiData.credits == null ? 0 : apiData.credits}
+                        </p>
+                    <label
+                    className="infoform-input-label peer"
+                    htmlFor="floating_firstname">Credits
+                    </label>
+                </div> 
+                {/* <div className="infoform-div-container group">
                         <p
                         className="infoform-input-field peer pl-3 pr-10"
                         type={passwordType}>
-                            {passwordType =="password" ? Array(formData.password.length).fill("•"): formData.password}
+                            {passwordType =="password" ? Array(apiData.password.length).fill("•"): apiData.password}
                         </p>
-                    }
                     <label
                     className="infoform-input-label peer"
                     htmlFor="floating_lastname">Password
@@ -134,21 +122,13 @@ function EditProfileForm({isEditing, apiData}){
                         size ={20}
                         />
                     </span>
-                </div>
+                </div> */}
                 <div className="infoform-div-container-centered">
-                    {editMode ? (
                         <button 
-                        className="submit-button"
-                        type="submit"
-                        >Submit
-                        </button>
-                    ):
-                        <button 
-                            className="submit-button"
+                            className=" text-black bg-red-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center border-2 border-black"
                             type="submit"
-                            >Edit
-                        </button>         
-                     }               
+                            >Delete
+                        </button>               
                 </div>
             </div>
         </form>

@@ -7,6 +7,7 @@ import useNavTitle from "./hooks/useNavTitle";
 /* Components */
 import Nav from "./components/Nav";
 import MovieList from "./components/MovieList";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 /* Pages */
 import EditPayment from "./pages/EditPayment";
@@ -94,9 +95,11 @@ function App() {
 			<Route
 				path="/profile"
 				element={
+					<ProtectedRoute>
 					<Nav title={"Profile"}>
 						<Profile></Profile>
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
@@ -142,16 +145,20 @@ function App() {
 			<Route
 				path="/profile/edit/userinfo"
 				element={
+					<ProtectedRoute>
 					<Nav>
 						<EditProfile />
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
 				path="/profile/edit/paymentinfo"
 				element={
 					<Nav>
+					<ProtectedRoute>
 						<EditPayment />
+					</ProtectedRoute>			
 					</Nav>
 				}
 			/>
@@ -159,7 +166,9 @@ function App() {
 				path="profile/premium"
 				element={
 					<Nav>
+					<ProtectedRoute>
 						<Premium />
+					</ProtectedRoute>
 					</Nav>
 				}
 			/>
@@ -167,7 +176,9 @@ function App() {
 				path="/profile/notifications"
 				element={
 					<Nav>
+					<ProtectedRoute>
 						<Notifications />
+					</ProtectedRoute>
 					</Nav>
 				}
 			/>
