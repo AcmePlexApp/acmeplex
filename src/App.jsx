@@ -10,6 +10,7 @@ import MovieList from "./components/MovieList";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 /* Pages */
+import Cart from "./pages/Cart";
 import EditPayment from "./pages/EditPayment";
 import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
@@ -100,6 +101,14 @@ function App() {
 						<Profile></Profile>
 					</Nav>
 					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/cart"
+				element={
+					<Nav title={"Your Cart"}>
+						<Cart />
+					</Nav>
 				}
 			/>
 			<Route
