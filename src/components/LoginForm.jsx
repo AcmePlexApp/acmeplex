@@ -6,16 +6,18 @@ import { eye } from "react-icons-kit/feather/eye";
 import { useAuth } from "../hooks/useAuth";
 import { postLogin } from "../utils/APIUtils";
 import { useToken } from "../hooks/useToken";
+import { getCart } from "../utils/APIUtils";
+import { useCart } from "../hooks/useCart";
 
 function LoginForm(props) {
 	//Handling for form data
 	const { setToken } = useToken();
+	const { setIsLoggedIn } = useAuth();
+	const { setCart } = useCart();
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
 	});
-
-	const { setIsLoggedIn } = useAuth();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -34,6 +36,7 @@ function LoginForm(props) {
 		if (token) {
 			setIsLoggedIn(true);
 			setToken(token.token);
+			getCart(token.token, setCart);
 		}
 		props.onClose();
 		//Navigation place holder

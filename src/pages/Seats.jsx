@@ -2,12 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useNavTitle from "../hooks/useNavTitle";
 import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
-import { getSeats, BASE_API_URL, BASE_HEADERS } from "../utils/APIUtils";
 import { useAuth } from "../hooks/useAuth";
 import Popup from "reactjs-popup";
 import Register from "../pages/Register";
 import { useToken } from "../hooks/useToken";
 import { useCart } from "../hooks/useCart";
+import {
+	postCart,
+	getCart,
+	getSeats,
+	deleteSeatFromCart,
+} from "../utils/APIUtils";
 
 function Seats() {
 	const params = useParams();
@@ -18,14 +23,11 @@ function Seats() {
 	const [showtimeDetails, setShowtimeDetails] = useState(null);
 	const showtimeId = parseInt(params.showtimeId, 10);
 	const showtime = data.showtimes[showtimeId];
-	// const movie = data.movies[showtime.movieId];
-	// const theater = data.theaters[showtime.theaterId];
 	const navigate = useNavigate();
 
 	const { isLoggedIn } = useAuth(); // Access auth state
 	const { token } = useToken();
 	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
-	// const [selectedSeat, setSelectedSeat ] = useState(null); // Track seat user clicked
 
 	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
 		[],
@@ -39,114 +41,50 @@ function Seats() {
 		}
 	);
 
-	const refreshCart = async () => {
-		try {
-			const response = await fetch(`${BASE_API_URL}/user/cart`, {
-				headers: {
-					...BASE_HEADERS,
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			const cartData = await response.json();
-			setCart(cartData);
-		} catch (error) {
-			console.error("Failed to fetch cart:", error.message);
-		}
-	};
-
-	const deleteSeatFromCart = async (seatId) => {
-		try {
-			// Find the ticket id corresponding to the seatId
-			const ticket = cart.find((item) => item.seat.id === seatId);
-			if (!ticket) {
-				throw new Error("Ticket not found for the provided seat ID.");
-			}
-
-			const response = await fetch(
-				`${BASE_API_URL}/user/removeticket/${ticket.id}`, // Use the ticket id here
-				{
-					method: "DELETE",
-					headers: {
-						...BASE_HEADERS,
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			// Check if the response is successful
-			if (response.ok) {
-				const message = await response.text(); // Await the text content of the response
-				console.log("Success message:", message);
-				await refreshCart(); // Refresh cart after successful deletion
-				return message; // Return the success message
-			} else {
-				// Handle errors
-				const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
-				throw new Error(errorMessage || "An unexpected error occurred.");
-			}
-		} catch (error) {
-			console.error("Failed to remove seat:", error.message);
-			throw error; // Re-throw the error for higher-level handling
-		}
-	};
-
-	const postCart = async (seatId) => {
-		try {
-			const response = await fetch(
-				`${BASE_API_URL}/user/selectseat/${seatId}`,
-				{
-					method: "POST",
-					headers: {
-						...BASE_HEADERS,
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			// Check if the response is successful
-			if (response.ok) {
-				const message = await response.text(); // Await the text content of the response
-				console.log("Success message:", message);
-				await refreshCart();
-				return message; // Return the success message
-			} else {
-				// Handle errors
-				const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
-				throw new Error(errorMessage || "An unexpected error occurred.");
-			}
-		} catch (error) {
-			console.error("Failed to book seat:", error.message);
-			throw error; // Re-throw the error for higher-level handling
-		}
-	};
-
 	const handleSeatSelection = (seat) => async () => {
 		console.log("Seat selected:", seat);
 		console.log("Cart:", cart);
+
 		if (!isLoggedIn) {
 			setIsPopupOpen(true);
 			return;
 		}
-		if (isSeatInCart(seat.id)) {
-			try {
-				const successMessage = await deleteSeatFromCart(seat.id);
+
+		try {
+			if (isSeatInCart(seat.id)) {
+				// Remove the seat from the cart
+				const successMessage = await deleteSeatFromCart(
+					seat.id,
+					token,
+					cart,
+					setCart
+				);
 				console.log("Seat removed successfully:", successMessage);
-			} catch (error) {
-				console.error("Error removing seat:", error.message);
-			}
-			return;
-		} else if (seat.status === "AVAILABLE") {
-			try {
-				const successMessage = await postCart(seat.id);
+
+				// Update the seat status to AVAILABLE
+				setSeats((prevSeats) =>
+					prevSeats.map((s) =>
+						s.id === seat.id ? { ...s, status: "AVAILABLE" } : s
+					)
+				);
+			} else if (seat.status === "AVAILABLE") {
+				// Add the seat to the cart
+				const successMessage = await postCart(seat.id, token, setCart);
 				console.log("Seat booked successfully:", successMessage);
-			} catch (error) {
-				console.error("Error booking seat:", error.message);
+
+				// Update the seat status to INCART
+				setSeats((prevSeats) =>
+					prevSeats.map((s) =>
+						s.id === seat.id ? { ...s, status: "INCART" } : s
+					)
+				);
+			} else if (seat.status === "BOOKED" || seat.status === "INCART") {
+				console.log("Seat is already booked.");
+			} else {
+				console.log("Unknown seat status:", seat.status);
 			}
-			return;
-		} else if (seat.status === "BOOKED" || seat.status === "INCART") {
-			console.log("Seat is already booked.");
-		} else {
-			console.log("Unknwn seat status:", seat.status);
+		} catch (error) {
+			console.error("Error handling seat selection:", error.message);
 		}
 	};
 
@@ -185,7 +123,7 @@ function Seats() {
 	useEffect(() => {
 		async function fetchCart() {
 			if (isLoggedIn) {
-				await refreshCart();
+				await getCart(token, setCart);
 			}
 		}
 		fetchCart();

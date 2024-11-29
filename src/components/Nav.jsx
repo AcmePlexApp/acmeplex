@@ -1,15 +1,16 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
+import { useCart } from "../hooks/useCart";
 import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
 import { postLogout } from "../utils/APIUtils";
 
-
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
 	const [isOpen, setIsOpen] = useState(false);
+	const { cart, setCart } = useCart();
 
 	const toggleMenu = () => {
 		setIsOpen(!isOpen);
@@ -18,12 +19,12 @@ function Nav(props) {
 		const confirm = window.confirm("Are you sure you want to log out?");
 		if (confirm) {
 			setIsLoggedIn(false);
-			postLogout()
+			setCart([]);
+			localStorage.clear();
+			postLogout();
 		}
 	};
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
-
-		
 
 	return (
 		<>
@@ -75,6 +76,11 @@ function Nav(props) {
 							{isLoggedIn && (
 								<li>
 									<NavLink to="/profile">Profile</NavLink>
+								</li>
+							)}
+							{isLoggedIn && cart.length > 0 && (
+								<li className="font-bold bg-blue-500">
+									<NavLink to="/cart">{`Cart (${cart.length})`}</NavLink>
 								</li>
 							)}
 							{isLoggedIn && (

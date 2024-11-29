@@ -9,6 +9,7 @@ import Nav from "./components/Nav";
 import MovieList from "./components/MovieList";
 
 /* Pages */
+import Cart from "./pages/Cart";
 import EditPayment from "./pages/EditPayment";
 import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
@@ -96,6 +97,14 @@ function App() {
 				element={
 					<Nav title={"Profile"}>
 						<Profile></Profile>
+					</Nav>
+				}
+			/>
+			<Route
+				path="/cart"
+				element={
+					<Nav title={"Your Cart"}>
+						<Cart />
 					</Nav>
 				}
 			/>
