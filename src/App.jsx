@@ -7,6 +7,7 @@ import useNavTitle from "./hooks/useNavTitle";
 /* Components */
 import Nav from "./components/Nav";
 import MovieList from "./components/MovieList";
+import ProtectedRoute from "./components/ProtectedRoute"
 
 /* Pages */
 import EditPayment from "./pages/EditPayment";
@@ -94,9 +95,11 @@ function App() {
 			<Route
 				path="/profile"
 				element={
+					<ProtectedRoute>
 					<Nav title={"Profile"}>
 						<Profile></Profile>
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
