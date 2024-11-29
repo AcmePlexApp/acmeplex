@@ -4,6 +4,8 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
+import { postLogout } from "../utils/APIUtils";
+
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -16,9 +18,12 @@ function Nav(props) {
 		const confirm = window.confirm("Are you sure you want to log out?");
 		if (confirm) {
 			setIsLoggedIn(false);
+			postLogout()
 		}
 	};
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
+
+		
 
 	return (
 		<>

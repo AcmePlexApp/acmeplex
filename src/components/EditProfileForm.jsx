@@ -18,7 +18,7 @@ function EditProfileForm({isEditing, apiData}){
             ...prevState,
             [name]: value
         }));
-    };
+    };  
     
     const handleSubmit =(e) =>{
         e.preventDefault();

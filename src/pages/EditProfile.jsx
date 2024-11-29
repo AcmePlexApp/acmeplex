@@ -38,7 +38,7 @@ function EditProfile({chlildren}) {
         if (token) {
           getUser();
         }
-      });
+    }, []);
 
 
     if (!userData) {
