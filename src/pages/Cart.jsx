@@ -4,10 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { getCart, deleteSeatFromCart } from "../utils/APIUtils";
 import { useEffect } from "react";
 import { useToken } from "../hooks/useToken";
+import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
 function Cart() {
 	const { cart, setCart } = useCart();
 	const navigate = useNavigate();
 	const { token } = useToken();
+	const { data } = useMovieTheaterShowtime();
+
+	const findShowtimeId = (theaterName, showtimeDateTime) => {
+		// Find theaterId based on theaterName
+		const theater = Object.values(data.theaters).find(
+			(theater) => theater.name === theaterName
+		);
+
+		if (!theater) return null;
+
+		// Find showtimeId based on theaterId and dateTime
+		const showtime = Object.values(data.showtimes).find(
+			(showtime) =>
+				showtime.theaterId === theater.id &&
+				showtime.dateTime === showtimeDateTime
+		);
+
+		return showtime ? showtime.id : null;
+	};
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	useEffect(() => {
@@ -37,6 +57,20 @@ function Cart() {
 						<span>{`Row ${item.seat.seatRow} `}</span>
 						<span>{`Seat ${item.seat.seatNumber}`}</span>
 					</div>
+				</div>
+				<div className="flex flex-col justify-end bg-transparent">
+					<button
+						className="underline bg-transparent"
+						onClick={() =>
+							navigate(
+								`/showtimes/${findShowtimeId(
+									item.theaterName,
+									item.showtime
+								)}`
+							)
+						}>
+						✏️Modify
+					</button>
 				</div>
 				<div className="flex flex-col justify-center bg-transparent">
 					<span>
@@ -90,7 +124,7 @@ function Cart() {
 								: navigate("/movies")
 						}>
 						{cart.length <= 0
-							? "Take Me to the Movies!"
+							? "🎥Take Me to the Movies!🍿"
 							: "Proceed to Checkout"}
 					</button>
 				</div>
