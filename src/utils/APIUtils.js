@@ -241,17 +241,102 @@ export const postLogout = async () => {
 }
 
 
-
-export const getUser = async () => {
-	const response = await fetch(
-		`${BASE_API_URL}/user`,
-		{
-			headers: BASE_HEADERS,
-			method: "GET",
+export const getUser = async (token) => {
+	try {
+	  const response = await fetch(`${BASE_API_URL}/user`, {
+		method: "GET",
+		headers: {
+		  ...BASE_HEADERS,  
+		  Authorization: `Bearer ${token}`,  
+		},
+	  });
+  
+	  if (!response.ok) {
+		throw new Error(`Failed to fetch user data: ${response.statusText}`);
+	  }
+  
+	  const data = await response.json();
+	  console.log("User data:", data);
+  
+	  return data;
+	} catch (error) {
+	  console.error("Error fetching user data:", error);
+	  throw error;  
+	}
+  };
+  
+  export const deleteUser = async (token) => {
+	try {
+		const response = await fetch(
+			`${BASE_API_URL}/user`,
+			{
+				method: "DELETE",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+		if (response.ok) {
+			console.log('User deleted');
+			return
+		} else {
+			// Handle errors
+			const errorMessage = (await response.text()).split(":")[1]?.trim(); 
+			throw new Error(errorMessage || "An unexpected error occurred.");
 		}
-	);
-	const data = await response.json();
-	console.log("User data:", data);
-	return data;
-}
+	} catch (error) {
+		console.error("Failed tp delete:", error.message);
+		throw error;
+	}
+};
 
+// export const postTicketPurchase = async (token, amount, applyCredits, firstName, lastName, cardNumber, expiry) => {
+// 	try {
+// 		const response = await fetch(`${BASE_API_URL}/user/purchase/${amount}/${applyCredits}`, {
+// 			method: "POST",
+// 			headers: {
+// 				...BASE_HEADERS,
+// 				Authorization: `Bearer ${token}`,
+// 			},
+// 			body: JSON.stringify({ firstName, lastName, cardNumber, expiry}),
+// 		});
+
+// 		if (!response.ok) {
+// 			const errorText = await response.text(); // Handle plain text error responses
+// 			console.error("Payment Failed:", errorText);
+// 			throw new Error(errorText);
+// 		}
+
+// 		const msg = await response.text(); // Parse JSON if response is OK
+// 		console.log(msg);
+// 	} catch (error) {
+// 		console.error("Error during pament:", error.message);
+// 		throw error; // Re-throw the error to be handled by the caller
+// 	}
+// };
+
+export const postCartPurchase = async (token, applyCredits, creditCard) => {
+	try {
+		const response = await fetch(`${BASE_API_URL}/user/cart/purchase/${applyCredits}`, {
+			method: "POST",
+			headers: {
+				...BASE_HEADERS,
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",	
+			},
+			body: creditCard ? JSON.stringify(creditCard) : null
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text(); // Handle plain text error response
+			throw new Error(errorText);
+	
+		}
+		const msg = await response.text(); // Parse JSON if response is OK
+		console.log(msg);
+	} catch (error) {
+		console.error("Error during cart payment", error.message);
+		throw error; // Re-throw the error to be handled by the caller
+	}
+};

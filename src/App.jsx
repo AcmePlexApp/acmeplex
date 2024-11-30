@@ -11,8 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 /* Pages */
 import Cart from "./pages/Cart";
-import EditPayment from "./pages/EditPayment";
-import EditProfile from "./pages/EditProfile";
+import MyAccount from "./pages/MyAccount";
 import Login from "./pages/Login";
 import MovieDetail from "./pages/MovieDetail";
 import Movies from "./pages/Movies";
@@ -26,6 +25,7 @@ import Premium from "./pages/Premium";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Seats from "./pages/Seats";
+import Tickets from "./pages/Tickets"
 
 /* Utils */
 import { getMovies, mapTheatersAndShowtimes } from "./utils/APIUtils";
@@ -152,21 +152,21 @@ function App() {
 				}
 			/>
 			<Route
-				path="/profile/edit/userinfo"
+				path="/profile/myaccount"
 				element={
 					<ProtectedRoute>
 					<Nav>
-						<EditProfile />
+						<MyAccount />
 					</Nav>
 					</ProtectedRoute>
 				}
 			/>
 			<Route
-				path="/profile/edit/paymentinfo"
+				path="/profile/mytickets"
 				element={
 					<Nav>
 					<ProtectedRoute>
-						<EditPayment />
+						<Tickets />
 					</ProtectedRoute>			
 					</Nav>
 				}
