@@ -15,8 +15,8 @@ const basename = import.meta.env.MODE === "development" ? "/" : "/frontend/";
 createRoot(document.getElementById("root")).render(
 	<AuthProvider>
 		<TokenProvider>
+		<PremiumProvider>
 			<NavTitleProvider>
-				<PremiumProvider>
 					<MovieTheaterShowtimeProvider>
 						<CartProvider>
 							<BrowserRouter
@@ -29,8 +29,8 @@ createRoot(document.getElementById("root")).render(
 							</BrowserRouter>
 						</CartProvider>
 					</MovieTheaterShowtimeProvider>
-				</PremiumProvider>
 			</NavTitleProvider>
+			</PremiumProvider>
 		</TokenProvider>
 	</AuthProvider>
 );
