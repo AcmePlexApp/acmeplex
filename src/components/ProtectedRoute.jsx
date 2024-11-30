@@ -7,7 +7,7 @@ function ProtectedRoute(props) {
 
 	if (!isLoggedIn) {
 		// Redirect to login page, preserving the path the user tried to access
-		return <Navigate to="/login" state={{ from: location }} replace />;
+		return <Navigate to="/movies" state={{ from: location }} replace />;
 	}
 
 	return props.children;
