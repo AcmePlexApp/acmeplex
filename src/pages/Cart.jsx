@@ -120,7 +120,7 @@ function Cart() {
 						className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md"
 						onClick={() =>
 							cart.length > 0
-								? navigate("/payment")
+								? navigate("/payment", {state: {from:"cart"}})
 								: navigate("/movies")
 						}>
 						{cart.length <= 0

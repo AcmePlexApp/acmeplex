@@ -29,9 +29,6 @@ function RegisterForm(props) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log("Form submitted");
-		console.log(formData.username);
-		console.log(formData.email);
-		console.log(formData.password);
 		const token = await postRegister(
 			formData.username,
 			formData.email,
@@ -75,7 +72,7 @@ function RegisterForm(props) {
 						required></input>
 					<label
 						className="infoform-input-label peer"
-						htmlFor="floating_lastname">
+						htmlFor="username">
 						Username
 					</label>
 				</div>
@@ -83,7 +80,7 @@ function RegisterForm(props) {
 					<input
 						className="infoform-input-field peer"
 						type="email"
-						id="floating_email"
+						id="email"
 						name="email"
 						value={formData.email}
 						onChange={handleChange}
@@ -91,7 +88,7 @@ function RegisterForm(props) {
 						required></input>
 					<label
 						className="infoform-input-label peer"
-						htmlFor="floating_firstname">
+						htmlFor="email">
 						Email Address
 					</label>
 				</div>
@@ -99,7 +96,7 @@ function RegisterForm(props) {
 					<input
 						className="infoform-input-field peer pl-3 pr-10"
 						type={passwordType}
-						id="floating_password"
+						id="password"
 						name="password"
 						value={formData.password}
 						onChange={handleChange}
@@ -107,7 +104,7 @@ function RegisterForm(props) {
 						required></input>
 					<label
 						className="infoform-input-label peer"
-						htmlFor="floating_lastname">
+						htmlFor="password">
 						Password
 					</label>
 					<span

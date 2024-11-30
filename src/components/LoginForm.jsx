@@ -39,8 +39,6 @@ function LoginForm(props) {
 			getCart(token.token, setCart);
 		}
 		props.onClose();
-		//Navigation place holder
-		//User query string to handle rerouting to previous page afer logging in (protected pages)
 	};
 
 	//Handling for password visibility

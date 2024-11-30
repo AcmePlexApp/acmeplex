@@ -1,8 +1,7 @@
-import EditPaymentForm from "../components/EditPaymentForm"
 import RedirectButton from "../components/RedirectButton";
 
 
-function EditPayment(){
+function Tickets(){
 
     return (
         <div>
@@ -13,13 +12,11 @@ function EditPayment(){
         >
     </RedirectButton>
         <div>
-            <EditPaymentForm
-             isEditing={false}/>
-        </div>      
-    </div>
-      );
-      
 
+           
+        </div>
+    </div>      
+    );
 };
 
-export default EditPayment
+export default Tickets
