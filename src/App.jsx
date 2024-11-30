@@ -15,7 +15,6 @@ import MyAccount from "./pages/MyAccount";
 import Login from "./pages/Login";
 import MovieDetail from "./pages/MovieDetail";
 import Movies from "./pages/Movies";
-import Notifications from "./pages/Notifications";
 import Theaters from "./pages/Theaters";
 import PageNotFound from "./pages/PageNotFound";
 import Payment from "./pages/Payment";
@@ -114,9 +113,11 @@ function App() {
 			<Route
 				path="/payment"
 				element={
+					<ProtectedRoute>
 					<Nav title={"Enter Your Credit Card Information"}>
 						<Payment></Payment>
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
@@ -138,17 +139,21 @@ function App() {
 			<Route
 				path="/payment/success"
 				element={
+					<ProtectedRoute>
 					<Nav>
 						<PaymentSuccess />
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
 				path="/payment/fail"
 				element={
+					<ProtectedRoute>
 					<Nav>
 						<PaymentFail />
 					</Nav>
+					</ProtectedRoute>
 				}
 			/>
 			<Route
@@ -177,16 +182,6 @@ function App() {
 					<Nav>
 					<ProtectedRoute>
 						<Premium />
-					</ProtectedRoute>
-					</Nav>
-				}
-			/>
-			<Route
-				path="/profile/notifications"
-				element={
-					<Nav>
-					<ProtectedRoute>
-						<Notifications />
 					</ProtectedRoute>
 					</Nav>
 				}

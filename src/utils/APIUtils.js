@@ -340,3 +340,28 @@ export const postCartPurchase = async (token, applyCredits, creditCard) => {
 		throw error; // Re-throw the error to be handled by the caller
 	}
 };
+
+export const postUserRegister= async (token, creditCard) => {
+	try {
+		const response = await fetch(`${BASE_API_URL}/user/register`, {
+			method: "POST",
+			headers: {
+				...BASE_HEADERS,
+				Authorization: `Bearer ${token}`,
+			},
+			body: creditCard ? JSON.stringify(creditCard) : null
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(errorText);
+	
+		}
+		const msg = await response.text(); 
+		console.log(msg);
+
+	} catch (error) {
+		console.error("Error register payment", error.message);
+		throw error;
+	}
+};
