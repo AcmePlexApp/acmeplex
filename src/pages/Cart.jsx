@@ -124,7 +124,7 @@ function Cart() {
 								: navigate("/movies")
 						}>
 						{cart.length <= 0
-							? "🎥Take Me to the Movies!🍿"
+							? "🎥Take Me to the Movies!🍿 "
 							: "Proceed to Checkout"}
 					</button>
 				</div>
