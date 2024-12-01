@@ -4,6 +4,7 @@ import { getTickets, cancelTicket } from "../utils/APIUtils";
 import { useToken } from "../hooks/useToken";
 import { parseISODate } from "../utils/timeUtils";
 import { isLessThan72Hours } from "../utils/timeUtils";
+import RedirectButton from "../components/RedirectButton";
 
 function Tickets() {
 	const { tickets, setTickets } = useTicket();
@@ -64,9 +65,16 @@ function Tickets() {
 	});
 
 	return (
-		<div className="w-full flex flex-col items-center">
-			<div className="w-full max-w-[40rem] flex flex-col justify-center">
-				{ticketList}
+		<div>
+			<RedirectButton
+                name='Back'
+                redirect="/profile"
+                className='back-button'
+            />
+			<div className="w-full flex flex-col items-center">
+				<div className="w-full max-w-[40rem] flex flex-col justify-center">
+					{ticketList}
+				</div>
 			</div>
 		</div>
 	);

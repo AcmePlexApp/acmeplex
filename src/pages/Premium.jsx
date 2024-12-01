@@ -31,7 +31,7 @@ function Premium() {
                                 Account Status
                             </label>
                         </div>
-
+{/* 
                         {isPremium && (
                             <div className="infoform-div-container group mb-4">
                                 <p className="infoform-input-field peer w-full" name= "expiryDate">
@@ -71,7 +71,7 @@ function Premium() {
                                     Expiration Date
                                 </label>
                             </div>
-                        )}
+                        )} */}
                         {!isPremium&& (
                             <div className="infoform-div-container-centered">
                             <button

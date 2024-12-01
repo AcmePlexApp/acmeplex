@@ -2,12 +2,14 @@ import "../Index.css"
 import { getUser } from "../utils/APIUtils";
 import { useToken } from "../hooks/useToken";
 import { useEffect, useState } from "react";
+// import { usePremium } from "../hooks/usePremium"
 
 
 
 function CreditCardForm({handleSubmit}){
     const {token} = useToken();
     const [userData, setUserData] = useState(null);
+    // const {isPremium} = usePremium();
     
     //Handling for form data
     const [formData, setFormData] = useState({
@@ -56,6 +58,7 @@ function CreditCardForm({handleSubmit}){
     return(
     <form className="w-full" onSubmit={handleFormSubmit}>
       <div className='flex flex-col items-center'>
+      {/* {!isPremium &&( */}
         <div className="mb-6 grid grid-cols-2 gap-4">
           {/* First Name Field */}
           <div className="col-span-2 sm:col-span-1">
@@ -162,7 +165,7 @@ function CreditCardForm({handleSubmit}){
               />
           </div> */}
         </div>
-  
+        {/* )} */}
         {/* Submit Button */}
         <button
           type="submit"
