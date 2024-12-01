@@ -38,7 +38,7 @@ function Cart() {
 		return (
 			<div
 				key={item.id}
-				className="flex flex-row justify-between bg-primary-600 rounded-xl">
+				className="flex flex-row justify-between bg-primary-600 rounded-xl border-2 border-black">
 				<div className="bg-transparent">
 					<div className="my-0 bg-transparent">
 						<span className="font-bold">{`${item.movieName} `}</span>
@@ -60,7 +60,7 @@ function Cart() {
 				</div>
 				<div className="flex flex-col justify-end bg-transparent">
 					<button
-						className="underline bg-transparent"
+						className="underline bg-transparent border-transparent hover:border-2 important hover:border-black"
 						onClick={() =>
 							navigate(
 								`/showtimes/${findShowtimeId(
@@ -77,7 +77,7 @@ function Cart() {
 						{`$${item.seat.cost}`}
 
 						<button
-							className="p-1 ml-4 text-white bg-transparent underline rounded-md"
+							className="p-1 ml-4 text-white bg-transparent underline rounded-md border-transparent hover:border-2 important hover:border-black"
 							onClick={() =>
 								deleteSeatFromCart(item.seat.id, token, cart, setCart)
 							}>
@@ -117,10 +117,10 @@ function Cart() {
 				)}
 				<div className="max-w-[30rem] bg-transparent w-full">
 					<button
-						className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md"
+						className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md "
 						onClick={() =>
 							cart.length > 0
-								? navigate("/payment", {state: {from:"cart"}})
+								? navigate("/payment", { state: { from: "cart" } })
 								: navigate("/movies")
 						}>
 						{cart.length <= 0

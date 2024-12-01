@@ -40,6 +40,48 @@ export const getSeats = async (showtimeId) => {
 	return data;
 };
 
+export const getTickets = async (token, setTickets) => {
+	const response = await fetch(`${BASE_API_URL}/user/tickets`, {
+		headers: {
+			...BASE_HEADERS,
+			Authorization: `Bearer ${token}`,
+		},
+	});
+	const data = await response.json();
+	console.log("Tickets data:", data);
+	setTickets(data);
+	return data;
+};
+
+export const cancelTicket = async (ticket, token, setTickets) => {
+	try {
+		const response = await fetch(
+			`${BASE_API_URL}/user/cancelticket/${ticket.id}`, // Use the ticket id here
+			{
+				method: "DELETE",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+
+		// Check if the response is successful
+		if (response.ok) {
+			const message = await response.text(); // Await the text content of the response
+			console.log("Success message:", message);
+			await getTickets(token, setTickets); // Refresh ticket list after successful deletion
+			return message; // Return the success message
+		} else {
+			// Handle errors
+			const errorMessage = (await response.text()).split(":")[1]?.trim(); // Extract the error message
+			throw new Error(errorMessage || "An unexpected error occurred.");
+		}
+	} catch (error) {
+		console.error("Failed to remove seat:", error.message);
+		throw error; // Re-throw the error for higher-level handling
+	}
+};
 
 export const mapTheatersAndShowtimes = (movies) => {
 	const theatersMap = {};
@@ -224,65 +266,58 @@ export const deleteSeatFromCart = async (seatId, token, cart, setCart) => {
 	}
 };
 
-
 export const postLogout = async () => {
-	console.log("postLogout Called")
-	const response = await fetch(
-		`${BASE_API_URL}/auth/logout`,
-		{
-			headers:{
+	console.log("postLogout Called");
+	const response = await fetch(`${BASE_API_URL}/auth/logout`, {
+		headers: {
 			...BASE_HEADERS,
-			},
-			method: "POST",
-		});
+		},
+		method: "POST",
+	});
 	const data = await response.text();
 	console.log("Logout data:", data);
-	return data
-}
-
+	return data;
+};
 
 export const getUser = async (token) => {
 	try {
-	  const response = await fetch(`${BASE_API_URL}/user`, {
-		method: "GET",
-		headers: {
-		  ...BASE_HEADERS,  
-		  Authorization: `Bearer ${token}`,  
-		},
-	  });
-  
-	  if (!response.ok) {
-		throw new Error(`Failed to fetch user data: ${response.statusText}`);
-	  }
-  
-	  const data = await response.json();
-	  console.log("User data:", data);
-  
-	  return data;
+		const response = await fetch(`${BASE_API_URL}/user`, {
+			method: "GET",
+			headers: {
+				...BASE_HEADERS,
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`Failed to fetch user data: ${response.statusText}`);
+		}
+
+		const data = await response.json();
+		console.log("User data:", data);
+
+		return data;
 	} catch (error) {
-	  console.error("Error fetching user data:", error);
-	  throw error;  
+		console.error("Error fetching user data:", error);
+		throw error;
 	}
-  };
-  
-  export const deleteUser = async (token) => {
+};
+
+export const deleteUser = async (token) => {
 	try {
-		const response = await fetch(
-			`${BASE_API_URL}/user`,
-			{
-				method: "DELETE",
-				headers: {
-					...BASE_HEADERS,
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		);
+		const response = await fetch(`${BASE_API_URL}/user`, {
+			method: "DELETE",
+			headers: {
+				...BASE_HEADERS,
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		if (response.ok) {
-			console.log('User deleted');
-			return
+			console.log("User deleted");
+			return;
 		} else {
 			// Handle errors
-			const errorMessage = (await response.text()).split(":")[1]?.trim(); 
+			const errorMessage = (await response.text()).split(":")[1]?.trim();
 			throw new Error(errorMessage || "An unexpected error occurred.");
 		}
 	} catch (error) {
@@ -318,20 +353,22 @@ export const getUser = async (token) => {
 
 export const postCartPurchase = async (token, applyCredits, creditCard) => {
 	try {
-		const response = await fetch(`${BASE_API_URL}/user/cart/purchase/${applyCredits}`, {
-			method: "POST",
-			headers: {
-				...BASE_HEADERS,
-				Authorization: `Bearer ${token}`,
-				"Content-Type": "application/json",	
-			},
-			body: creditCard ? JSON.stringify(creditCard) : null
-		});
+		const response = await fetch(
+			`${BASE_API_URL}/user/cart/purchase/${applyCredits}`,
+			{
+				method: "POST",
+				headers: {
+					...BASE_HEADERS,
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: creditCard ? JSON.stringify(creditCard) : null,
+			}
+		);
 
 		if (!response.ok) {
 			const errorText = await response.text(); // Handle plain text error response
 			throw new Error(errorText);
-	
 		}
 		const msg = await response.text(); // Parse JSON if response is OK
 		console.log(msg);
@@ -341,7 +378,7 @@ export const postCartPurchase = async (token, applyCredits, creditCard) => {
 	}
 };
 
-export const postUserRegister= async (token, creditCard) => {
+export const postUserRegister = async (token, creditCard) => {
 	try {
 		const response = await fetch(`${BASE_API_URL}/user/register`, {
 			method: "POST",
@@ -349,17 +386,15 @@ export const postUserRegister= async (token, creditCard) => {
 				...BASE_HEADERS,
 				Authorization: `Bearer ${token}`,
 			},
-			body: creditCard ? JSON.stringify(creditCard) : null
+			body: creditCard ? JSON.stringify(creditCard) : null,
 		});
 
 		if (!response.ok) {
 			const errorText = await response.text();
 			throw new Error(errorText);
-	
 		}
-		const msg = await response.text(); 
+		const msg = await response.text();
 		console.log(msg);
-
 	} catch (error) {
 		console.error("Error register payment", error.message);
 		throw error;

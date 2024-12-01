@@ -20,3 +20,20 @@ export const parseISODate = (isoString) => {
 	const formattedTime = `${hours}:${minutes} ${ampm}`;
 	return { date: formattedDate, time: formattedTime };
 };
+
+export function isLessThan72Hours(dateString) {
+	// Parse the date string into a Date object
+	const recordedDate = new Date(dateString);
+
+	// Ensure the Date object is valid
+	if (isNaN(recordedDate)) {
+		throw new Error("Invalid date format");
+	}
+
+	const currentTime = Date.now(); // Current time in milliseconds
+	const differenceInMilliseconds = recordedDate - currentTime; // Positive for future, negative for past
+	const seventyTwoHoursInMilliseconds = 72 * 60 * 60 * 1000; // 72 hours in milliseconds
+
+	// Only consider future dates within 72 hours
+	return differenceInMilliseconds < seventyTwoHoursInMilliseconds;
+}

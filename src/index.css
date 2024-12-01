@@ -42,7 +42,8 @@ li {
 }
 
 button {
-	@apply bg-primary-500 text-primary-100 rounded-md p-1;
+	/* @apply bg-primary-500 text-primary-100 rounded-md p-1; */
+	@apply text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center border-2 border-black;
 }
 
 /* Custom Classes - Please Sort Alphabetically */
@@ -83,7 +84,7 @@ button {
 }
 
 .infoform-form-container {
-	@apply max-w-md mx-auto rounded-lg border border-4 border-black rounded-lg p-4 shadow-lg sm:p-6 lg:max-w-xl lg:p-8;
+	@apply max-w-md mx-auto border-4 border-black rounded-lg p-4 shadow-lg sm:p-6 lg:max-w-xl lg:p-8;
 }
 
 .infoform-input-field {
@@ -95,7 +96,7 @@ button {
 }
 
 .infoform-input-label {
-	@apply peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6;
+	@apply peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6;
 }
 
 .profile-div-container {
@@ -125,6 +126,6 @@ button {
 }
 
 #popup-root {
-    background-color: rgb(15, 23, 42);
-    z-index: 9999; 
-  }
+	background-color: rgb(15, 23, 42);
+	z-index: 9999;
+}

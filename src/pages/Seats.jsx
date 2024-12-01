@@ -13,6 +13,7 @@ import {
 	getSeats,
 	deleteSeatFromCart,
 } from "../utils/APIUtils";
+import Notification from "../components/Notification";
 
 function Seats() {
 	const params = useParams();
@@ -28,6 +29,7 @@ function Seats() {
 	const { isLoggedIn } = useAuth(); // Access auth state
 	const { token } = useToken();
 	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
+	const [message, setMessage] = useState("");
 
 	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
 		[],
@@ -59,7 +61,7 @@ function Seats() {
 					cart,
 					setCart
 				);
-				console.log("Seat removed successfully:", successMessage);
+				setMessage(successMessage);
 
 				// Update the seat status to AVAILABLE
 				setSeats((prevSeats) =>
@@ -70,7 +72,7 @@ function Seats() {
 			} else if (seat.status === "AVAILABLE") {
 				// Add the seat to the cart
 				const successMessage = await postCart(seat.id, token, setCart);
-				console.log("Seat booked successfully:", successMessage);
+				setMessage(successMessage);
 
 				// Update the seat status to INCART
 				setSeats((prevSeats) =>
@@ -84,7 +86,7 @@ function Seats() {
 				console.log("Unknown seat status:", seat.status);
 			}
 		} catch (error) {
-			console.error("Error handling seat selection:", error.message);
+			setMessage(`${error.message}`);
 		}
 	};
 
@@ -149,10 +151,28 @@ function Seats() {
 			<p className="m-0 p-0">Showtime: {formattedShowtimeDate}</p>
 			<div className="w-full mt-0 p-0">
 				{seats ? (
-					<div className="flex flex-col items-center space-y-4">
-						<h2 className="text-lg font-semibold">Select Your Seats:</h2>
+					<div className="flex flex-col items-center">
+						<h2 className="text-lg font-semibold m-0">
+							Select Your Seats:
+						</h2>
 						<div>
-							<div className="border-[0.125rem] border-gray-500 text-gray-500 text-center">
+							<div className="flex flex-row justify-between m-0">
+								<span className="my-1 flex flex-col justify-center">
+									Legend:
+								</span>
+								<div className="flex flex-row flex-1 justify-between my-0">
+									<span className="bg-green-500 p-2 my-4 border-2 rounded border-black text-white">
+										Available
+									</span>
+									<span className="bg-blue-500 p-2 my-4 border-2 rounded border-black text-white">
+										In Your Cart
+									</span>
+									<span className="bg-gray-600 p-2 my-4 border-2 rounded border-black text-gray-300">
+										Unavailable
+									</span>
+								</div>
+							</div>
+							<div className="border-[0.125rem] border-gray-500 text-gray-500 text-center mt-0">
 								Screen
 							</div>
 							<div className="grid mt-0 grid-cols-5 gap-2 md:gap-4">
@@ -195,6 +215,7 @@ function Seats() {
 				<div>You must be logged in to book a seat.</div>
 				<Register onClose={() => setIsPopupOpen(false)} />
 			</Popup>
+			<Notification message={message} />
 		</div>
 	);
 }

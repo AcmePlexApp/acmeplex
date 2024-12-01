@@ -1,19 +1,16 @@
 import SuccessDisplay from "../components/SuccessDisplay";
-import "../index.css"
+import "../index.css";
 
 function PaymentSuccess() {
-
-
 	return (
 		<div>
-            <SuccessDisplay
-            message= "Payment Successful!"
-            buttonName="Back to browsing"
-            buttonStyle="submit-button"
-            redirectLink="/movies"
-            />
-            
-        </div>
+			<SuccessDisplay
+				message="Payment Successful!"
+				buttonName="View Tickets"
+				buttonStyle="submit-button"
+				redirectLink="/profile/mytickets"
+			/>
+		</div>
 	);
 }
 

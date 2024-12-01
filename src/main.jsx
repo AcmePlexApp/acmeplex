@@ -9,28 +9,31 @@ import MovieTheaterShowtimeProvider from "./contexts/MovieTheaterShowtimeProvide
 import TokenProvider from "./contexts/TokenProvider";
 import CartProvider from "./contexts/CartProvider";
 import PremiumProvider from "./contexts/PremiumProvider";
+import TicketProvider from "./contexts/TicketProvider";
 
 const basename = import.meta.env.MODE === "development" ? "/" : "/frontend/";
 
 createRoot(document.getElementById("root")).render(
 	<AuthProvider>
 		<TokenProvider>
-		<PremiumProvider>
-			<NavTitleProvider>
-					<MovieTheaterShowtimeProvider>
-						<CartProvider>
-							<BrowserRouter
-								basename={basename}
-								future={{
-									v7_startTransition: true,
-									v7_relativeSplatPath: true,
-								}}>
-								<App />
-							</BrowserRouter>
-						</CartProvider>
-					</MovieTheaterShowtimeProvider>
-			</NavTitleProvider>
-			</PremiumProvider>
+			<TicketProvider>
+				<PremiumProvider>
+					<NavTitleProvider>
+						<MovieTheaterShowtimeProvider>
+							<CartProvider>
+								<BrowserRouter
+									basename={basename}
+									future={{
+										v7_startTransition: true,
+										v7_relativeSplatPath: true,
+									}}>
+									<App />
+								</BrowserRouter>
+							</CartProvider>
+						</MovieTheaterShowtimeProvider>
+					</NavTitleProvider>
+				</PremiumProvider>
+			</TicketProvider>
 		</TokenProvider>
 	</AuthProvider>
 );
