@@ -30,6 +30,7 @@ function Seats() {
 	const { token } = useToken();
 	const [isPopupOpen, setIsPopupOpen] = useState(false); // State for login popup
 	const [message, setMessage] = useState("");
+	const [count, setCount] = useState(0);
 
 	const formattedShowtimeDate = new Date(showtime.dateTime).toLocaleString(
 		[],
@@ -44,9 +45,6 @@ function Seats() {
 	);
 
 	const handleSeatSelection = (seat) => async () => {
-		console.log("Seat selected:", seat);
-		console.log("Cart:", cart);
-
 		if (!isLoggedIn) {
 			setIsPopupOpen(true);
 			return;
@@ -61,6 +59,8 @@ function Seats() {
 					cart,
 					setCart
 				);
+				setCount((prev) => prev + 1);
+
 				setMessage(successMessage);
 
 				// Update the seat status to AVAILABLE
@@ -72,6 +72,8 @@ function Seats() {
 			} else if (seat.status === "AVAILABLE") {
 				// Add the seat to the cart
 				const successMessage = await postCart(seat.id, token, setCart);
+				setCount((prev) => prev + 1);
+
 				setMessage(successMessage);
 
 				// Update the seat status to INCART
@@ -86,6 +88,8 @@ function Seats() {
 				console.log("Unknown seat status:", seat.status);
 			}
 		} catch (error) {
+			setCount((prev) => prev + 1);
+
 			setMessage(`${error.message}`);
 		}
 	};
@@ -215,7 +219,7 @@ function Seats() {
 				<div>You must be logged in to book a seat.</div>
 				<Register onClose={() => setIsPopupOpen(false)} />
 			</Popup>
-			<Notification message={message} />
+			<Notification message={message} key={count} />
 		</div>
 	);
 }

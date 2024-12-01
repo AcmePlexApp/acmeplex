@@ -2,15 +2,18 @@ import { useCart } from "../hooks/useCart";
 import { parseISODate } from "../utils/timeUtils";
 import { useNavigate } from "react-router-dom";
 import { getCart, deleteSeatFromCart } from "../utils/APIUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToken } from "../hooks/useToken";
 import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
 import FailDisplay from "../components/FailDisplay";
+import Notification from "../components/Notification";
 function Cart() {
 	const { cart, setCart } = useCart();
 	const navigate = useNavigate();
 	const { token } = useToken();
 	const { data } = useMovieTheaterShowtime();
+	const [count, setCount] = useState(0);
+	const [message, setMessage] = useState("");
 
 	const findShowtimeId = (theaterName, showtimeDateTime) => {
 		// Find theaterId based on theaterName
@@ -30,6 +33,18 @@ function Cart() {
 		return showtime ? showtime.id : null;
 	};
 
+	const handleDeleteFromCart = async (seatId) => {
+		try {
+			await deleteSeatFromCart(seatId, token, cart, setCart);
+			setCount((prev) => prev + 1);
+			setMessage("Seat removed from cart successfully");
+		} catch (error) {
+			setCount((prev) => prev + 1);
+			setMessage(error.message);
+			console.error("Failed to delete seat from cart:", error);
+		}
+	};
+
 	/* eslint-disable react-hooks/exhaustive-deps */
 	useEffect(() => {
 		getCart(token, setCart);
@@ -39,7 +54,7 @@ function Cart() {
 		return (
 			<div
 				key={item.id}
-				className="flex flex-row justify-between bg-primary-600 rounded-xl border-2 border-black">
+				className="flex flex-col sm:flex-row justify-between bg-primary-600 rounded-xl border-2 border-black">
 				<div className="bg-transparent">
 					<div className="my-0 bg-transparent">
 						<span className="font-bold">{`${item.movieName} `}</span>
@@ -59,9 +74,9 @@ function Cart() {
 						<span>{`Seat ${item.seat.seatNumber}`}</span>
 					</div>
 				</div>
-				<div className="flex flex-col justify-end bg-transparent">
+				<div className="flex flex-col flex-grow-0 justify-end bg-transparent p-0 m-0">
 					<button
-						className="underline bg-transparent border-transparent hover:border-2 important hover:border-black"
+						className="p-1 m-0 underline bg-transparent border-transparent hover:border-2 important hover:border-black"
 						onClick={() =>
 							navigate(
 								`/showtimes/${findShowtimeId(
@@ -73,18 +88,15 @@ function Cart() {
 						✏️Modify
 					</button>
 				</div>
-				<div className="flex flex-col justify-center bg-transparent">
+				<div className="flex flex-col sm:flex-row items-center justify-center bg-transparent">
 					<span>
-						{`$${item.seat.cost}`}
-
 						<button
 							className="p-1 ml-4 text-white bg-transparent underline rounded-md border-transparent hover:border-2 important hover:border-black"
-							onClick={() =>
-								deleteSeatFromCart(item.seat.id, token, cart, setCart)
-							}>
+							onClick={() => handleDeleteFromCart(item.seat.id)}>
 							Remove
 						</button>
 					</span>
+					<span>{`$${item.seat.cost}`}</span>
 				</div>
 			</div>
 		);
@@ -96,16 +108,14 @@ function Cart() {
 				onClick={() => navigate(-1)}>
 				&lt; Back
 			</button>
-			<div
-				id="centerThisDiv"
-				className="w-full flex flex-col items-center justify-between">
+			<div className="w-full flex flex-col items-center justify-between">
 				{cart.length > 0 ? (
-					<div className="max-w-[30rem] bg-transparent w-full">
+					<div className="max-w-[40rem] bg-transparent w-full">
 						{cartList}
 						<hr className="mt-4" />
 						<div className="bg-transparent flex flex-row justify-end">
 							<span className="mr-2">{`Total (${cart.length} tickets):`}</span>
-							<span className="mr-[5.5rem]">
+							<span className="mr-3">
 								{`$${cart.reduce(
 									(acc, item) => acc + item.seat.cost,
 									0
@@ -121,7 +131,7 @@ function Cart() {
 					/>
 				)}
 				{cart.length > 0 ? (
-					<div className="max-w-[30rem] bg-transparent w-full">
+					<div className="max-w-[40rem] bg-transparent w-full">
 						<button
 							className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md "
 							onClick={() =>
@@ -131,6 +141,7 @@ function Cart() {
 						</button>
 					</div>
 				) : null}
+				<Notification message={message} key={count} />
 			</div>
 		</>
 	);
