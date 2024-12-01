@@ -24,7 +24,9 @@ function CheckoutSummary() {
 		? cart.reduce((acc, item) => acc + item.seat.cost, 0).toFixed(2)
 		: 0;
 	const creditTotal = userData?.credits
-		? userData.credits.reduce((partialSum, a) => partialSum + a, 0).toFixed(2)
+		? userData.credits
+				.reduce((partialSum, a) => partialSum + a.amount, 0)
+				.toFixed(2)
 		: 0;
 	const creditLimit = creditTotal > cartTotal ? cartTotal : creditTotal;
 	const navigate = useNavigate();
@@ -55,9 +57,7 @@ function CheckoutSummary() {
 				try {
 					const data = await getUser(token);
 					setUserData(data);
-					setHasCredits(() => {
-						data.credits.length == 0 ? false : true;
-					});
+					setHasCredits(data.credits.length > 0);
 					getCart(token, setCart);
 				} catch (error) {
 					console.error("Error fetching user data:", error);
@@ -120,8 +120,8 @@ function CheckoutSummary() {
 							{hasCredits && (
 								<div className="flex items-center bg-transparent w-full ">
 									<p className="text-sm italic text-gray-300 text-left flex-grow w-full">
-										You have credits available for use, would you like
-										to apply them?
+										{`You have $${creditTotal} in credits available for use, would you like
+										to apply them?`}
 									</p>
 									<input
 										type="checkbox"
