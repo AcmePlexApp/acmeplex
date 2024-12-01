@@ -63,6 +63,16 @@ export const cancelTicket = async (ticket, token, setTickets) => {
 					...BASE_HEADERS,
 					Authorization: `Bearer ${token}`,
 				},
+				body: JSON.stringify({
+					id: 1,
+					firstName: "TestFirstName",
+					lastName: "TestLastName",
+					cardNumber: "1111222233334444",
+					expiry: "1122",
+					bank: {
+						id: 1,
+					},
+				}),
 			}
 		);
 
