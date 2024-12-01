@@ -54,6 +54,12 @@ export const getTickets = async (token, setTickets) => {
 };
 
 export const cancelTicket = async (ticket, token, setTickets) => {
+	const confirm = window.confirm(
+		"Are you sure you want to cancel this ticket? Note: Unregistered users will receive a 15% deduction as a cancellation fee, but will be available as credits for future purchases. Registered users will receive a full refund."
+	);
+	if (!confirm) {
+		return;
+	}
 	try {
 		const response = await fetch(
 			`${BASE_API_URL}/user/cancelticket/${ticket.id}`, // Use the ticket id here

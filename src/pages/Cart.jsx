@@ -5,6 +5,7 @@ import { getCart, deleteSeatFromCart } from "../utils/APIUtils";
 import { useEffect } from "react";
 import { useToken } from "../hooks/useToken";
 import useMovieTheaterShowtime from "../hooks/useMovieTheaterShowtime";
+import FailDisplay from "../components/FailDisplay";
 function Cart() {
 	const { cart, setCart } = useCart();
 	const navigate = useNavigate();
@@ -113,30 +114,26 @@ function Cart() {
 						</div>
 					</div>
 				) : (
-					<p className="text-center font-bold">Your cart is empty!</p>
+					<FailDisplay
+						message="Your cart is empty!"
+						buttonName="🎥Take Me to the Movies!🍿"
+						redirectLink={"/movies"}
+					/>
 				)}
-				<div className="max-w-[30rem] bg-transparent w-full">
-					<button
-						className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md "
-						onClick={() =>
-							cart.length > 0
-								? navigate("/payment", { state: { from: "cart" } })
-								: navigate("/movies")
-						}>
-						{cart.length <= 0
-							? "🎥Take Me to the Movies!🍿 "
-							: "Proceed to Checkout"}
-					</button>
-				</div>
+				{cart.length > 0 ? (
+					<div className="max-w-[30rem] bg-transparent w-full">
+						<button
+							className="w-full p-2 mt-4 text-white bg-blue-500 rounded-md "
+							onClick={() =>
+								navigate("/payment", { state: { from: "cart" } })
+							}>
+							{"Proceed to Checkout"}
+						</button>
+					</div>
+				) : null}
 			</div>
 		</>
 	);
 }
 
 export default Cart;
-
-// cost: 10.99;
-// id: 33;
-// seatNumber: 3;
-// seatRow: 2;
-// status: "INCART";

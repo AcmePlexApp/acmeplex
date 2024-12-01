@@ -6,7 +6,7 @@ import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
 import { postLogout } from "../utils/APIUtils";
-import acmeplexLogo from "../assets/acmeplexLogo.png"
+import acmeplexLogo from "../assets/acmeplexLogo.png";
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -29,34 +29,40 @@ function Nav(props) {
 
 	return (
 		<>
-			<div className="sticky top-0 mb-0 z-20">
-				<nav>
-					<div className="m-0 p-0 bg-primary-800">
-						<div className="bg-primary-800 flex flex-col align-middle justify-center sm:hidden">
+			<div className="sticky top-0 mb-0 z-20 rounded-t-xl">
+				<nav className="rounded-t-xl">
+					<div className="m-0 p-0 bg-primary-800 rounded-t-3xl">
+						<div className="bg-primary-800 rounded-t-3xl flex flex-col m-0 p-0 align-middle justify-center sm:hidden">
 							<button
-								className="text-white bg-primary-800"
+								className="text-white bg-primary-800 border-none"
 								onClick={toggleMenu}>
 								{isOpen ? "✖️" : "☰"}
 							</button>
 						</div>
 						<ul
 							onClick={() => setIsOpen(false)}
-							className={`bg-primary-800 rounded-t-mdflex-col sm:flex-row justify-between text-center ${
+							className={`bg-primary-800 rounded-t-full flex flex-col m-0 p-0 sm:flex-row justify-between text-center items-center ${
 								isOpen ? "flex" : "hidden"
 							} sm:flex`}>
-							<li>
-								<NavLink to="/">
-								<img src={acmeplexLogo} alt="Acmeplex Logo" className="w-28" />
+							{/* Your list items here */}
+
+							<li className="flex flex-col items-center m-0 p-0 rounded-t-2xl">
+								<NavLink to="/" className="m-0 p-0">
+									<img
+										src={acmeplexLogo}
+										alt="Acmeplex Logo"
+										className="w-28 m-0 p-0"
+									/>
 								</NavLink>
 							</li>
-							<li>
+							<li className="flex flex-col items-center ">
 								<NavLink to="/movies">Movies</NavLink>
 							</li>
-							<li>
+							<li className="flex flex-col items-center ">
 								<NavLink to="/theaters">Theaters</NavLink>
 							</li>
 							{!isLoggedIn && (
-								<li>
+								<li className="flex flex-col items-center ">
 									<NavLink
 										to="#"
 										onClick={() => setIsOpenPopup(true)}

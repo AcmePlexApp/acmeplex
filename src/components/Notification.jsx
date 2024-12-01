@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 function Notification({ message }) {
 	const [visible, setVisible] = useState(false);
 	const [currentMessage, setCurrentMessage] = useState("");
+	const [count, setCount] = useState(0);
 
 	useEffect(() => {
 		if (message) {
@@ -16,15 +17,18 @@ function Notification({ message }) {
 			const autoHideTimer = setTimeout(() => {
 				setVisible(false); // Hide after 2 seconds
 			}, 2000);
+			setCount((prev) => prev + 1);
 
 			return () => clearTimeout(autoHideTimer);
 		}
-	}, [message]);
+	}, [message, setCount]);
 
 	if (!visible || !currentMessage) return null;
 
 	return (
-		<div className="max-w-96 fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg flex items-center space-x-2">
+		<div
+			key={count}
+			className="max-w-96 fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg flex items-center space-x-2">
 			<span>{currentMessage}</span>
 			<button
 				className="text-white focus:outline-none border-none bg-transparent"

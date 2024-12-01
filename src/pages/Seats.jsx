@@ -156,20 +156,20 @@ function Seats() {
 							Select Your Seats:
 						</h2>
 						<div>
-							<div className="flex flex-row justify-between m-0">
-								<span className="my-1 flex flex-col justify-center">
+							<div className="flex flex-col sm:flex-row flex-wrap justify-between m-0 items-center">
+								<div className="my-1 flex flex-col justify-center">
 									Legend:
-								</span>
-								<div className="flex flex-row flex-1 justify-between my-0">
-									<span className="bg-green-500 p-2 my-4 border-2 rounded border-black text-white">
+								</div>
+								<div className="flex-1 flex flex-col sm:flex-row flex-wrap justify-between items-center my-0">
+									<div className="bg-green-500 p-2 my-4 border-2 rounded border-black text-white">
 										Available
-									</span>
-									<span className="bg-blue-500 p-2 my-4 border-2 rounded border-black text-white">
+									</div>
+									<div className="bg-blue-500 p-2 my-4 border-2 rounded border-black text-white">
 										In Your Cart
-									</span>
-									<span className="bg-gray-600 p-2 my-4 border-2 rounded border-black text-gray-300">
+									</div>
+									<div className="bg-gray-600 p-2 my-4 border-2 rounded border-black text-gray-300">
 										Unavailable
-									</span>
+									</div>
 								</div>
 							</div>
 							<div className="border-[0.125rem] border-gray-500 text-gray-500 text-center mt-0">
