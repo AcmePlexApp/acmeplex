@@ -6,9 +6,9 @@ function PaymentSuccess() {
 		<div>
 			<SuccessDisplay
 				message="Payment Successful!"
-				buttonName="View Tickets"
+				buttonName="Back to browsing"
 				buttonStyle="submit-button"
-				redirectLink="/profile/mytickets"
+				redirectLink="/movies"
 			/>
 		</div>
 	);

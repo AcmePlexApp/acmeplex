@@ -21,14 +21,15 @@ function CheckoutSummary() {
 	const { setTickets } = useTicket();
 
 	const cartTotal = cart
-		? cart.reduce((acc, item) => acc + item.seat.cost, 0).toFixed(2)
+		? cart.reduce((acc, item) => acc + item.seat.cost, 0)
 		: 0;
 	const creditTotal = userData?.credits
 		? userData.credits
 				.reduce((partialSum, a) => partialSum + a.amount, 0)
-				.toFixed(2)
+				
 		: 0;
-	const creditLimit = creditTotal > cartTotal ? cartTotal : creditTotal;
+	const creditLimit = (creditTotal > cartTotal) ? cartTotal : creditTotal;
+
 	const navigate = useNavigate();
 
 	const handleCheckboxChange = () => {
@@ -39,7 +40,7 @@ function CheckoutSummary() {
 		console.log("Payment submitted with data", formData);
 		try {
 			setIsLoading(true);
-			await postCartPurchase(token, isChecked ? creditLimit : 0, formData);
+			await postCartPurchase(token, isChecked, formData);
 			setCart([]);
 			setIsLoading(false);
 			navigate("/payment/success");
@@ -59,6 +60,8 @@ function CheckoutSummary() {
 					setUserData(data);
 					setHasCredits(data.credits.length > 0);
 					getCart(token, setCart);
+					
+
 				} catch (error) {
 					console.error("Error fetching user data:", error);
 					setUserData(null);
@@ -69,6 +72,11 @@ function CheckoutSummary() {
 		}
 	}, [token, setCart]);
 
+	console.log("Credit Limit", creditLimit)
+	console.log("CreditTotal", creditTotal)
+	console.log("CartTotal", cartTotal)
+
+
 	return isLoading ? (
 		<div>Processing Payment...</div>
 	) : (
@@ -78,13 +86,13 @@ function CheckoutSummary() {
 					<div className="flex flex-col p-4 w-full border-2 border-black bg-primary-600">
 						<div className="flex justify-between items-center mb-4 bg-transparent">
 							<p className="text-left">Cart Total:</p>
-							<p className="text-right font-semibold">$ {cartTotal}</p>
+							<p className="text-right font-semibold">$ {cartTotal.toFixed(2)}</p>
 						</div>
 						{isChecked && (
 							<div className="flex justify-between items-center mb-4 bg-transparent">
 								<p className="text-left">Credits Applied:</p>
 								<p className="text-right font-semibold">
-									$ {creditLimit}
+									$ {creditLimit.toFixed(2)}
 								</p>
 							</div>
 						)}
@@ -104,7 +112,7 @@ function CheckoutSummary() {
 							<div className="flex justify-between items-center bg-transparent">
 								<p className="text-left mr-12">Payment Total:</p>
 								<p className="text-right font-semibold">
-									$ {cartTotal - creditLimit}
+									$ {(cartTotal - creditLimit).toFixed(2)}
 								</p>
 							</div>
 						) : (
@@ -120,7 +128,7 @@ function CheckoutSummary() {
 							{hasCredits && (
 								<div className="flex items-center bg-transparent w-full ">
 									<p className="text-sm italic text-gray-300 text-left flex-grow w-full">
-										{`You have $${creditTotal} in credits available for use, would you like
+										{`You have $${creditTotal.toFixed(2)} in credits available for use, would you like
 										to apply them?`}
 									</p>
 									<input

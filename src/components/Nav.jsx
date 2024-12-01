@@ -6,6 +6,7 @@ import Popup from "reactjs-popup";
 import "../index.css";
 import Register from "../pages/Register";
 import { postLogout } from "../utils/APIUtils";
+import acmeplexLogo from "../assets/acmeplexLogo.png"
 
 function Nav(props) {
 	const { isLoggedIn, setIsLoggedIn } = useAuth();
@@ -40,11 +41,13 @@ function Nav(props) {
 						</div>
 						<ul
 							onClick={() => setIsOpen(false)}
-							className={`bg-primary-800 rounded-t-md p-1 flex-col sm:flex-row justify-between text-center ${
+							className={`bg-primary-800 rounded-t-mdflex-col sm:flex-row justify-between text-center ${
 								isOpen ? "flex" : "hidden"
 							} sm:flex`}>
 							<li>
-								<NavLink to="/">Logo</NavLink>
+								<NavLink to="/">
+								<img src={acmeplexLogo} alt="Acmeplex Logo" className="w-28" />
+								</NavLink>
 							</li>
 							<li>
 								<NavLink to="/movies">Movies</NavLink>
