@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Standard HTML Elements - High level to low level*/
+/* Containers */
+html,
+body {
+	@apply h-full bg-primary-900 text-primary-100 p-1;
+}
+
+nav {
+	@apply sticky top-0 mb-0 bg-primary-800 rounded-md;
+}
+nav ul {
+	@apply bg-primary-800 rounded-t-md p-1 flex sm:flex-row flex-col justify-between text-center;
+}
+
+nav .active {
+	@apply font-bold;
+}
+
+div {
+	@apply bg-primary-700 rounded-md m-1 p-1;
+}
+
+/* Text */
+h1 {
+	@apply sticky mt-2 top-14 font-bold text-xl bg-primary-700;
+}
+
+h2 {
+	@apply font-bold text-lg mt-3;
+}
+
+h3 {
+	@apply font-bold py-0 my-0;
+}
+
+li {
+	@apply p-2;
+}
+
+button {
+	/* @apply bg-primary-500 text-primary-100 rounded-md p-1; */
+	@apply text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center border-2 border-black;
+}
+
+/* Custom Classes - Please Sort Alphabetically */
+
+.back-button {
+	@apply text-white bg-gray-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center border-2 border-gray-800 inline-flex items-center justify-center;
+}
+
+.ccForm-form-container {
+	@apply w-full rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6 lg:max-w-xl lg:p-8;
+}
+
+.ccForm-label {
+	@apply mb-2 block text-sm font-medium text-gray-900 dark:text-white;
+}
+
+.ccForm-field {
+	@apply block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500;
+}
+
+.ccForm-field {
+	@apply block w-full rounded-lg border border-gray-600 bg-gray-700 p-2.5 pe-10 text-sm text-white focus:border-primary-500 focus:ring-primary-500;
+}
+
+.contents-container {
+	@apply min-h-full p-0;
+}
+
+.infoform-div-container-centered {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.infoform-div-container {
+	@apply relative z-0 w-full mb-5;
+}
+
+.infoform-form-container {
+	@apply max-w-md mx-auto border-4 border-black rounded-lg p-4 shadow-lg sm:p-6 lg:max-w-xl lg:p-8;
+}
+
+.infoform-input-field {
+	@apply block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600;
+}
+
+.infoform-input-field-editable {
+	@apply block py-2.5 px-0 w-full text-sm text-blue-300 bg-transparent border-0 border-b-2 border-gray-600 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600;
+}
+
+.infoform-input-label {
+	@apply peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6;
+}
+
+.profile-div-container {
+	@apply w-2/3 mx-auto resize rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6 lg:max-w-xl lg:p-8;
+}
+
+.redirect-button {
+	@apply text-white bg-gray-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center border-2 border-gray-800;
+}
+
+.submit-button {
+	@apply text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center border-2 border-black;
+}
+
+.popup-overlay {
+	backdrop-filter: blur(10px);
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-modal {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	max-width: 500px;
+	width: 100%;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+#popup-root {
+	background-color: rgb(15, 23, 42);
+	z-index: 9999;
+}
